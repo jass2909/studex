@@ -4,13 +4,13 @@ import { getAuth } from "firebase/auth"; // Optional if you need auth services
 
 // Firebase configuration (replace with your own config)
 const firebaseConfig = {
-  apiKey: "AIzaSyDywNdRbif5BFi_q5hb7rUhzvrOXTGrrks",
-  authDomain: "studex-e3c2a.firebaseapp.com",
-  projectId: "studex-e3c2a",
-  storageBucket: "studex-e3c2a.firebasestorage.app",
-  messagingSenderId: "1076156754259",
-  appId: "1:1076156754259:web:c0d7a65d58ce2f739519a6",
-  measurementId: "G-PQD022RY3E",
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
