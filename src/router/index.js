@@ -28,6 +28,16 @@ const routes = [
     name: "search",
     component: () => import("@/views/SearchPage.vue"),
   },
+  {
+    path: "/sell",
+    name: "sell",
+    component: () => import("@/views/SellPage.vue"),
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: () => import("@/views/ProfilePage.vue"),
+  },
 ];
 
 const router = createRouter({

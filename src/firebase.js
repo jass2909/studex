@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth"; // Optional if you need auth services
-
 // Firebase configuration (replace with your own config)
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,

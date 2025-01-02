@@ -1,13 +1,19 @@
 <template>
   <nav>
-    <h1 v-if="isAuthenticated">Hey, {{ user }}</h1>
+    <!-- Display greeting with username if authenticated -->
+    <h1 v-if="isAuthenticated">Hey, {{ user.username }}</h1>
+
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/search">Search</router-link> |
 
     <!-- Conditionally show login/register links if user is not authenticated -->
-    <router-link v-if="!isAuthenticated" to="/login">Login |</router-link>
-    <router-link v-if="!isAuthenticated" to="/register">Register |</router-link>
+    <router-link v-if="!isAuthenticated" to="/login">Login</router-link> |
+    <router-link v-if="!isAuthenticated" to="/register">Register</router-link> |
+
+    <!-- Conditionally show Profile and Sell links if authenticated -->
+    <router-link v-if="isAuthenticated" to="/profile">Profile</router-link> |
+    <router-link v-if="isAuthenticated" to="/sell">Sell</router-link> |
 
     <!-- Show logout link if user is authenticated -->
     <button v-if="isAuthenticated" @click="logout">Logout</button>
@@ -37,22 +43,24 @@ nav {
   }
 }
 </style>
+
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   computed: {
-    isAuthenticated() {
-      return this.$store.getters.isAuthenticated; // This assumes you have the `isAuthenticated` getter in your Vuex store
-    },
+    ...mapGetters({
+      isAuthenticated: "auth/isAuthenticated",
+      getUser: "auth/getUser",
+    }),
     user() {
-      return this.$store.getters.getUserName; // This assumes you have the `user` getter in your Vuex store
+      return this.getUser || {};
     },
   },
   methods: {
-    logout() {
-      // Dispatch the logout action from your Vuex store
-      this.$store.dispatch("logout");
-      this.$router.push("/"); // Redirect to home page after logout
-    },
+    ...mapActions({
+      logout: "auth/logout",
+    }),
   },
 };
 </script>

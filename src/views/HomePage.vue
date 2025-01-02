@@ -3,10 +3,10 @@
     <h1>Marketplace</h1>
 
     <!-- Login Button (conditionally show if not authenticated) -->
-
+    <div v-if="!isAuthenticated">Please login</div>
     <div v-for="product in products" :key="product.id">
       <router-link :to="`/product/${product.id}`">
-        {{ product.itemName }} - €{{ product.price }}
+        {{ product.name }} - €{{ product.price }}
       </router-link>
     </div>
   </div>
@@ -17,25 +17,31 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   computed: {
+    // Map products from the main store
     ...mapGetters(["allProducts"]),
+
     products() {
       return this.allProducts;
     },
-    // Check if user is authenticated from Vuex store
+
+    // Explicitly access the namespaced isAuthenticated getter
     isAuthenticated() {
-      return this.$store.getters.isAuthenticated; // assuming this getter exists in Vuex store
+      return this.$store.getters["auth/isAuthenticated"];
     },
   },
   created() {
     this.fetchProducts();
   },
   methods: {
+    // Map fetchProducts action
     ...mapActions(["fetchProducts"]),
+
     goToLogin() {
-      this.$router.push("/login"); // Navigates to login page
+      this.$router.push("/login");
     },
+
     goToRegister() {
-      this.$router.push("/register"); // Navigates to register page
+      this.$router.push("/register");
     },
   },
 };

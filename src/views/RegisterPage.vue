@@ -1,16 +1,18 @@
 <template>
   <div>
     <h1>Register</h1>
-    <form @submit.prevent="register">
-      <input v-model="email" type="email" placeholder="Email" required />
+    <form @submit.prevent="handleRegister">
+      <input type="email" v-model="email" placeholder="Email" required />
       <input
-        v-model="password"
         type="password"
+        v-model="password"
         placeholder="Password"
         required
       />
+      <input type="text" v-model="username" placeholder="Username" required />
       <button type="submit">Register</button>
     </form>
+    <p v-if="error" class="error">{{ error }}</p>
   </div>
 </template>
 
@@ -22,21 +24,30 @@ export default {
     return {
       email: "",
       password: "",
+      username: "",
+      error: "",
     };
   },
   methods: {
     ...mapActions(["register"]),
-    async register() {
+    async handleRegister() {
       try {
-        await this.$store.dispatch("register", {
+        await this.register({
           email: this.email,
           password: this.password,
+          username: this.username,
         });
-        this.$router.push("/");
+        this.$router.push("/login"); // Redirect to login after successful registration
       } catch (error) {
-        console.error("Register Error:", error.message);
+        this.error = error.message;
       }
     },
   },
 };
 </script>
+
+<style scoped>
+.error {
+  color: red;
+}
+</style>

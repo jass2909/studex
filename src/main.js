@@ -1,6 +1,16 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./router";
 import store from "./store";
+import router from "./router";
 
-createApp(App).use(router).use(store).mount("#app");
+const app = createApp(App);
+
+// Ensure this action is correctly dispatched
+store
+  .dispatch("auth/initializeAuth")
+  .then(() => {
+    app.use(store).use(router).mount("#app");
+  })
+  .catch((error) => {
+    console.error("Failed to initialize authentication:", error);
+  });
