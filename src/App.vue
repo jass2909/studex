@@ -1,23 +1,153 @@
 <template>
-  <nav>
+  <nav class="bg-gray-800 text-white p-4 flex items-center justify-between">
     <!-- Display greeting with username if authenticated -->
-    <h1 v-if="isAuthenticated">Hey, {{ user.username }}</h1>
+    <div>
+      <h1
+        v-if="!$route.path.includes('product') && isAuthenticated"
+        class="text-lg font-semibold"
+      >
+        Hey, {{ user.username }}
+      </h1>
+      <button
+        v-else-if="$route.path.includes('product')"
+        class="text-lg font-semibold bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+        @click="$router.go(-1)"
+      >
+        Go back
+      </button>
+    </div>
 
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/search">Search</router-link> |
+    <!-- Mobile Hamburger Menu Icon -->
+    <div class="lg:hidden flex items-center">
+      <button @click="toggleMenu" class="text-white focus:outline-none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+    </div>
 
-    <!-- Conditionally show login/register links if user is not authenticated -->
-    <router-link v-if="!isAuthenticated" to="/login">Login</router-link> |
-    <router-link v-if="!isAuthenticated" to="/register">Register</router-link> |
+    <!-- Navbar Links (Desktop) -->
+    <div class="hidden lg:flex items-center space-x-4">
+      <router-link to="/" class="text-gray-300 hover:text-white"
+        >Home</router-link
+      >
+      <router-link to="/about" class="text-gray-300 hover:text-white"
+        >About</router-link
+      >
+      <router-link to="/search" class="text-gray-300 hover:text-white"
+        >Search</router-link
+      >
 
-    <!-- Conditionally show Profile and Sell links if authenticated -->
-    <router-link v-if="isAuthenticated" to="/profile">Profile</router-link> |
-    <router-link v-if="isAuthenticated" to="/sell">Sell</router-link> |
+      <!-- Conditionally show login/register links if user is not authenticated -->
+      <router-link
+        v-if="!isAuthenticated"
+        to="/login"
+        class="text-gray-300 hover:text-white"
+        >Login</router-link
+      >
+      <router-link
+        v-if="!isAuthenticated"
+        to="/register"
+        class="text-gray-300 hover:text-white"
+        >Register</router-link
+      >
 
-    <!-- Show logout link if user is authenticated -->
-    <button v-if="isAuthenticated" @click="logout">Logout</button>
+      <!-- Conditionally show Profile and Sell links if authenticated -->
+      <router-link
+        v-if="isAuthenticated"
+        to="/profile"
+        class="text-gray-300 hover:text-white"
+        >Profile</router-link
+      >
+      <router-link
+        v-if="isAuthenticated"
+        to="/sell"
+        class="text-gray-300 hover:text-white"
+        >Sell</router-link
+      >
+
+      <!-- Show logout link if user is authenticated -->
+      <button
+        v-if="isAuthenticated"
+        @click="logout"
+        class="text-gray-300 hover:text-white bg-transparent border-2 border-white px-4 py-2 rounded-lg"
+      >
+        Logout
+      </button>
+    </div>
+
+    <!-- Mobile Navbar Links -->
+    <div
+      v-if="isMenuOpen"
+      class="lg:hidden absolute top-16 left-0 right-0 bg-gray-800 p-4 space-y-4"
+    >
+      <button
+        v-if="$route.path.startsWith('/product/')"
+        @click="goBack"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full"
+      >
+        Back
+      </button>
+      <router-link to="/" class="text-gray-300 hover:text-white block"
+        >Home</router-link
+      >
+      <router-link to="/about" class="text-gray-300 hover:text-white block"
+        >About</router-link
+      >
+      <router-link to="/search" class="text-gray-300 hover:text-white block"
+        >Search</router-link
+      >
+
+      <!-- Conditionally show login/register links if user is not authenticated -->
+      <router-link
+        v-if="!isAuthenticated"
+        to="/login"
+        class="text-gray-300 hover:text-white block"
+        >Login</router-link
+      >
+      <router-link
+        v-if="!isAuthenticated"
+        to="/register"
+        class="text-gray-300 hover:text-white block"
+        >Register</router-link
+      >
+
+      <!-- Conditionally show Profile and Sell links if authenticated -->
+      <router-link
+        v-if="isAuthenticated"
+        to="/profile"
+        class="text-gray-300 hover:text-white block"
+        >Profile</router-link
+      >
+      <router-link
+        v-if="isAuthenticated"
+        to="/sell"
+        class="text-gray-300 hover:text-white block"
+        >Sell</router-link
+      >
+
+      <!-- Show logout link if user is authenticated -->
+      <button
+        v-if="isAuthenticated"
+        @click="logout"
+        class="text-gray-300 hover:text-white bg-transparent border-2 border-white px-4 py-2 rounded-lg w-full"
+      >
+        Logout
+      </button>
+    </div>
   </nav>
+
   <router-view />
 </template>
 
@@ -48,6 +178,11 @@ nav {
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+  data() {
+    return {
+      isMenuOpen: false,
+    };
+  },
   computed: {
     ...mapGetters({
       isAuthenticated: "auth/isAuthenticated",
@@ -61,6 +196,13 @@ export default {
     ...mapActions({
       logout: "auth/logout",
     }),
+    goBack() {
+      this.$router.go(-1);
+      this.isMenuOpen = false;
+    },
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
   },
 };
 </script>

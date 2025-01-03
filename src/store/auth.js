@@ -76,8 +76,6 @@ export default {
         email: user.email,
         username: userData.username,
       });
-
-      this.$router.push("/");
     },
     async logout({ commit }) {
       await signOut(auth);
