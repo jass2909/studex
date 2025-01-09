@@ -26,11 +26,35 @@
           class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
+        <!-- Category -->
+        <select
+          v-model="itemCategory"
+          required
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          
+        >
+          <option value="" disabled selected>Select Category</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Home">Home</option>
+          <option value="Toys">Toys</option>
+          <option value="Books">Books</option>
+        </select>
+
         <!-- Description -->
         <input
           type="text"
           v-model="itemDescription"
           placeholder="Description"
+          required
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <!-- Location -->
+        <input
+          type="text"
+          v-model="itemLocation"
+          placeholder="Location (City and Postal Code)"
           required
           class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -82,6 +106,8 @@ export default {
       itemName: "",
       itemPrice: "",
       itemDescription: "",
+      itemLocation: "",
+      itemCategory: "",
       file: null,
       uploadSuccess: false,
       uploadError: "",
@@ -140,6 +166,8 @@ export default {
           name: this.itemName,
           price: this.itemPrice,
           description: this.itemDescription,
+          location: this.itemLocation,
+          category: this.itemCategory,
           imageUrl,
           sellerId: this.user.username,
           createdAt: new Date(),

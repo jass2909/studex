@@ -1,13 +1,9 @@
 <template>
   <div class="container mx-auto p-4">
-    <!-- Marketplace Title -->
-    <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">
-      Marketplace
-    </h1>
 
     <!-- Authentication Message -->
     <div v-if="!isAuthenticated" class="text-center text-red-500 text-lg mb-4">
-      Please login to access all features.
+      You must be logged in to view the marketplace.
     </div>
 
     <!-- Product List -->
@@ -31,6 +27,7 @@
           <div class="flex flex-col">
             <span class="font-semibold text-gray-800">{{ product.name }}</span>
             <span class="text-gray-600">€{{ product.price }}</span>
+            <span class="text-gray-600">Location: {{ product.location }}</span>
           </div>
         </router-link>
       </div>
