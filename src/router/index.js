@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { isAuthenticated } from "@/store/auth";
+import store from "@/store"; // Adjust the path to your Vuex store file
 
 import ProductDetail from "@/views/ProductDetail.vue";
 
@@ -32,10 +32,11 @@ const routes = [
   {
     path: "/sell",
     name: "sell",
-    component: () => import("@/views/SellPage.vue"),
+    meta: { requiresAuth: true },
+    component: () => import("@/views/SellPage.vue"), 
   },
   {
-    path: "/profile",
+    path: "/profile/:uid",
     name: "profile",
     component: () => import("@/views/ProfilePage.vue"),
   },
@@ -45,12 +46,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !isAuthenticated()) {
-    next("/login");
-  } else {
-    next();
-  }
-});
+
 
 export default router;

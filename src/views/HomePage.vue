@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="container mt-10 p-4">
 
     <!-- Authentication Message -->
     <div v-if="!isAuthenticated" class="text-center text-red-500 text-lg mb-4">
@@ -7,7 +7,7 @@
     </div>
 
     <!-- Product List -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <div
         v-for="product in products"
         :key="product.id"
@@ -21,7 +21,7 @@
             <img
               :src="product.imageUrl"
               alt="Product Image"
-              class="w-full h-64 object-cover rounded-lg"
+              class="w-full h-64 object-contain rounded-mg"
             />
           </div>
           <div class="flex flex-col">

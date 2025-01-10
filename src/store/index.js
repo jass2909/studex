@@ -48,5 +48,8 @@ export default createStore({
     allProducts: (state) => state.products,
     getProductById: (state) => (id) =>
       state.products.find((product) => product.id === id),
+    getProductsByUserName: (state) => (username) =>
+      state.products.filter((product) => product.sellerId === username),
   },
+
 });

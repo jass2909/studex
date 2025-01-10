@@ -15,6 +15,16 @@
         Go back
       </button>
     </div>
+    <div>
+      <router-link
+        v-if="isAuthenticated"
+        :to="{ name: 'profile', params: { uid: user.uid } }"
+
+        
+        class="text-gray-300 hover:text-white"
+        >My Profile</router-link
+      >
+    </div>
 
     <!-- Mobile Hamburger Menu Icon -->
     <div class="lg:hidden flex items-center">
@@ -64,12 +74,7 @@
       >
 
       <!-- Conditionally show Profile and Sell links if authenticated -->
-      <router-link
-        v-if="isAuthenticated"
-        to="/profile"
-        class="text-gray-300 hover:text-white"
-        >Profile</router-link
-      >
+
       <router-link
         v-if="isAuthenticated"
         to="/sell"
@@ -147,8 +152,10 @@
       </button>
     </div>
   </nav>
-
-  <router-view  class="mt-24"/>
+  <div class="container mx-auto p-4" >
+   <RouterView class="mt-24" />
+  </div>
+  
 </template>
 
 <style lang="scss">
@@ -172,9 +179,19 @@ nav {
     }
   }
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
 
 <script>
+import { RouterView } from "vue-router";
 import { mapGetters, mapActions } from "vuex";
 
 export default {

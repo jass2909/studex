@@ -31,6 +31,17 @@
         />
       </div>
       <div>
+
+        <input
+          type="text"
+          v-model="city"
+          placeholder="City"
+          required
+          class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
         <button
           type="submit"
           class="w-full py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -53,6 +64,7 @@ export default {
       email: "",
       password: "",
       username: "",
+      city: "",
       error: "",
     };
   },
