@@ -51,9 +51,11 @@
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">Incoming Offers</h2>
         <div v-for="offer in incomingOffers" :key="offer.id" class="bg-white rounded-lg shadow-lg p-4 mb-4">
           <p><strong>Product:</strong> {{ offer.productName }}</p>
-          <p><strong>Offer Amount:</strong> ${{ offer.offerAmount }}</p>
+          <p><strong>Offer Amount:</strong> ${{ offer.offerAmount }} €</p>
           <p><strong>Buyer:</strong> {{ offer.buyerId }}</p>
           <p><strong>Status:</strong> {{ offer.status || "Pending" }}</p>
+          <button v-if="offer.status === 'Pending'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" @click="acceptOffer(offer.id)">Accept Offer</button>
+          <button v-if="offer.status === 'Pending'" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4 ml-2" @click="declineOffer(offer.id)">Decline Offer</button>
         </div>
       </div>
     </div>
