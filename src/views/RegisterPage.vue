@@ -69,19 +69,19 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["register"]),
     async handleRegister() {
-      try {
-        await this.register({
-          email: this.email,
-          password: this.password,
-          username: this.username,
-        });
-        this.$router.push("/login"); // Redirect to login after successful registration
-      } catch (error) {
-        this.error = error.message;
-      }
-    },
+    try {
+      await this.$store.dispatch("auth/register", {
+        email: this.email,
+        password: this.password,
+        username: this.username,
+      });
+      this.$router.push("/login");
+    } catch (error) {
+      this.error = error.message; // Display error in the component
+      console.error("Registration failed:", error);
+    }
+  },
   },
 };
 </script>

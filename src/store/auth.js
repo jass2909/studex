@@ -44,21 +44,22 @@ export default {
       });
     },
     async register({ commit }, { email, password, username }) {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      await setDoc(doc(db, "users", user.uid), {
-        name: user.displayName,
-        email: user.email,
-        createdAt: new Date().toISOString(),
-        username: username,
-      });
-
-      commit("setUser", { uid: user.uid, email: user.email, username });
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+    
+        await setDoc(doc(db, "users", user.uid), {
+          name: username,
+          email: user.email,
+          createdAt: new Date().toISOString(),
+          username: username,
+        });
+    
+        commit("setUser", { uid: user.uid, email: user.email, username });
+      } catch (error) {
+        console.error("Registration failed:", error);
+        throw new Error(error.message); // Re-throw the error to handle it in the component
+      }
     },
     async login({ commit }, { email, password }) {
       const userCredential = await signInWithEmailAndPassword(
