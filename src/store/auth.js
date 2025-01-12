@@ -78,9 +78,10 @@ export default {
         username: userData.username,
       });
     },
-    async logout({ commit }) {
+    async logout({ commit, $router }) {
       await signOut(auth);
       commit("clearUser");
+      this.$router.push("/");
     },
   },
   getters: {

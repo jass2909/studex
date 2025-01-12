@@ -20,6 +20,12 @@
           <p class="text-lg text-gray-700">
             <strong>Seller:</strong> {{ product.sellerId }}
           </p>
+<!-- Make an offer button only if user is logged in and not the seller -->
+<button
+  v-if="getUser && getUser.username !== product.sellerId"
+  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+  @click="makeOffer"
+> Make an Offer</button>
         </div>
 
         <!-- Image section (right side) -->
@@ -45,7 +51,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { doc, getDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 export default {
@@ -58,7 +64,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["isAuthenticated", "getProductById"]),
+    ...mapGetters({
+      isAuthenticated: "auth/isAuthenticated",
+      getUser: "auth/getUser",
+      getProductById: "getProductById",
+    }),
     // Check if the current route is a product detail page
     isProductPage() {
       return this.$route.name === "product-detail"; // Adjust this name according to your route name
@@ -68,6 +78,40 @@ export default {
     goBack() {
       this.$router.go(-1); // Go back to the previous page
     },
+    async makeOffer() {
+      if (!this.isAuthenticated) {
+        alert("Please log in to make an offer.");
+        return;
+      }
+      const offerDetails = prompt("Enter your offer details:");
+      if (!offerDetails || isNaN(offerDetails) || parseFloat(offerDetails) <= 0) {
+        alert("Invalid offer amount. Please enter a Valid number.");
+        return;
+      }
+      if (!this.getUser) {
+    alert("User not found. Please try logging in again.");
+    return;
+  }
+
+      try {
+        const userId = this.getUser.username;
+        const offerData = {
+          productId : this.productId,
+          productName: this.product.name,
+          offerAmount: parseFloat(offerDetails),
+          sellerId: this.product.sellerId,
+          buyerId: userId,
+          createdAt: new Date(),
+          status: "Pending",
+        };
+        await addDoc(collection(db, "offers"), offerData);
+        alert("Offer placed successfully!");
+      } catch (error) {
+        console.error("Error placing offer:", error);
+        alert("Error placing offer. Please try again later.");
+      }
+        }
+    
   },
   async created() {
     try {

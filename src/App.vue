@@ -52,9 +52,6 @@
       <router-link to="/" class="text-gray-300 hover:text-white"
         >Home</router-link
       >
-      <router-link to="/about" class="text-gray-300 hover:text-white"
-        >About</router-link
-      >
       <router-link to="/search" class="text-gray-300 hover:text-white"
         >Search</router-link
       >
@@ -80,6 +77,12 @@
         to="/sell"
         class="text-gray-300 hover:text-white"
         >Sell</router-link
+      >
+      <router-link @click="isMenuOpen = false"
+        v-if="isAuthenticated"
+        to="/offers"
+        class="text-gray-300 hover:text-white block"
+        >My Offers</router-link
       >
 
       <!-- Show logout link if user is authenticated -->
@@ -140,6 +143,12 @@
         to="/sell"
         class="text-gray-300 hover:text-white block"
         >Sell</router-link
+      >
+      <router-link @click="isMenuOpen = false"
+        v-if="isAuthenticated"
+        to="/offers"
+        class="text-gray-300 hover:text-white block"
+        >My Offers</router-link
       >
 
       <!-- Show logout link if user is authenticated -->
@@ -219,6 +228,15 @@ export default {
     },
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
+    },
+    async logout() {
+      try {
+        
+        await this.$store.dispatch("auth/logout");
+        
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
     },
   },
 };

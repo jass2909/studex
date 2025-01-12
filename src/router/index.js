@@ -40,6 +40,12 @@ const routes = [
     name: "profile",
     component: () => import("@/views/ProfilePage.vue"),
   },
+  {
+    path: "/offers",
+    name: "offers",
+    meta: { requiresAuth: true },
+    component: () => import("@/views/OffersPage.vue"),
+  },
 ];
 
 const router = createRouter({

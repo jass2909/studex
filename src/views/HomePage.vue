@@ -3,7 +3,9 @@
 
     <!-- Authentication Message -->
     <div v-if="!isAuthenticated" class="text-center text-red-500 text-lg mb-4">
-      You must be logged in to view the marketplace.
+      You must be logged in to view this page.
+      <router-link to="/login" class="text-blue-500 hover:underline">Login</router-link>
+
     </div>
 
     <!-- Product List -->
