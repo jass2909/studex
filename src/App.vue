@@ -1,6 +1,8 @@
 <template>
-<nav class="bg-gray-800 text-white p-4 flex items-center justify-between fixed top-5 left-1/2 transform -translate-x-1/2 w-[90%] max-w-[800px] z-10 rounded-md shadow-lg">
-  <div>
+  <nav
+    class="bg-gray-800 text-white p-4 flex items-center justify-between fixed top-5 left-1/2 transform -translate-x-1/2 w-[90%] max-w-[800px] z-10 rounded-md shadow-lg"
+  >
+    <div>
       <h1
         v-if="!$route.path.includes('product') && isAuthenticated"
         class="text-lg font-semibold"
@@ -19,8 +21,6 @@
       <router-link
         v-if="isAuthenticated"
         :to="{ name: 'profile', params: { uid: user.uid } }"
-
-        
         class="text-gray-300 hover:text-white"
         >My Profile</router-link
       >
@@ -28,7 +28,10 @@
 
     <!-- Mobile Hamburger Menu Icon -->
     <div class="lg:hidden flex items-center">
-      <button  @click="toggleMenu" class="text-white focus:outline-none transition-transform duration-300">
+      <button
+        @click="toggleMenu"
+        class="text-white focus:outline-none transition-transform duration-300"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -78,7 +81,8 @@
         class="text-gray-300 hover:text-white"
         >Sell</router-link
       >
-      <router-link @click="isMenuOpen = false"
+      <router-link
+        @click="isMenuOpen = false"
         v-if="isAuthenticated"
         to="/offers"
         class="text-gray-300 hover:text-white block"
@@ -107,24 +111,35 @@
       >
         Back
       </button>
-      <router-link @click="isMenuOpen = false" to="/" class="text-gray-300 hover:text-white block"
+      <router-link
+        @click="isMenuOpen = false"
+        to="/"
+        class="text-gray-300 hover:text-white block"
         >Home</router-link
       >
-      <router-link @click="isMenuOpen = false" to="/about" class="text-gray-300 hover:text-white block"
+      <router-link
+        @click="isMenuOpen = false"
+        to="/about"
+        class="text-gray-300 hover:text-white block"
         >About</router-link
       >
-      <router-link @click="isMenuOpen = false" to="/search" class="text-gray-300 hover:text-white block"
+      <router-link
+        @click="isMenuOpen = false"
+        to="/search"
+        class="text-gray-300 hover:text-white block"
         >Search</router-link
       >
 
       <!-- Conditionally show login/register links if user is not authenticated -->
-      <router-link @click="isMenuOpen = false"
+      <router-link
+        @click="isMenuOpen = false"
         v-if="!isAuthenticated"
         to="/login"
         class="text-gray-300 hover:text-white block"
         >Login</router-link
       >
-      <router-link @click="isMenuOpen = false"
+      <router-link
+        @click="isMenuOpen = false"
         v-if="!isAuthenticated"
         to="/register"
         class="text-gray-300 hover:text-white block"
@@ -132,19 +147,22 @@
       >
 
       <!-- Conditionally show Profile and Sell links if authenticated -->
-      <router-link @click="isMenuOpen = false"
+      <router-link
+        @click="isMenuOpen = false"
         v-if="isAuthenticated"
         to="/profile"
         class="text-gray-300 hover:text-white block"
         >Profile</router-link
       >
-      <router-link @click="isMenuOpen = false"
+      <router-link
+        @click="isMenuOpen = false"
         v-if="isAuthenticated"
         to="/sell"
         class="text-gray-300 hover:text-white block"
         >Sell</router-link
       >
-      <router-link @click="isMenuOpen = false"
+      <router-link
+        @click="isMenuOpen = false"
         v-if="isAuthenticated"
         to="/offers"
         class="text-gray-300 hover:text-white block"
@@ -152,7 +170,7 @@
       >
 
       <!-- Show logout link if user is authenticated -->
-      <button 
+      <button
         v-if="isAuthenticated"
         @click="logout, (isMenuOpen = false)"
         class="text-gray-300 hover:text-white bg-transparent border-2 border-white px-4 py-2 rounded-lg w-full"
@@ -161,10 +179,9 @@
       </button>
     </div>
   </nav>
-  <div class="container mx-auto p-4" >
-   <RouterView class="mt-24" />
+  <div class="container mx-auto p-4">
+    <RouterView class="mt-24" />
   </div>
-  
 </template>
 
 <style lang="scss">
@@ -231,9 +248,8 @@ export default {
     },
     async logout() {
       try {
-        
         await this.$store.dispatch("auth/logout");
-        
+        this.$router.push("/login");
       } catch (error) {
         console.error("Logout failed:", error);
       }

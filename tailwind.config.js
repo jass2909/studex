@@ -584,6 +584,14 @@ module.exports = {
           transform: "rotate(360deg)",
         },
       },
+      fadeIn: {
+        "0%, 100%": {
+          opacity: "0",
+        },
+        "50%": {
+          opacity: "1",
+        },
+      },
       ping: {
         "75%, 100%": {
           transform: "scale(2)",

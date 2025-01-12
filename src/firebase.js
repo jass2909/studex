@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getMessaging, onMessage, getToken } from "firebase/messaging";
 import { getAuth } from "firebase/auth"; // Optional if you need auth services
 // Firebase configuration (replace with your own config)
 const firebaseConfig = {
@@ -18,5 +19,6 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firestore and Auth
 const db = getFirestore(app);
 const auth = getAuth(app);
+const messaging = getMessaging(app);
 
-export { db, auth };
+export { db, auth, messaging, getToken, onMessage };

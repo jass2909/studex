@@ -23,7 +23,7 @@
       </button>
     </div>
     </div>
-    <div class="">
+    <div class="text-4xl font-bold text-center text-gray-800 mb-6">
       <h1>My Items</h1>
 
     </div>
