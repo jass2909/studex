@@ -23,12 +23,14 @@
       </button>
     </div>
     </div>
-    <div class="bg-white rounded-lg shadow-lg p-6 flex justify-center mb-4">
+    <div class="">
       <h1>My Items</h1>
-      <div>
-        <div v-for="product in products" :key="product.id">
+
+    </div>
+    <div >
+        <div class="bg-white rounded-lg shadow-lg p-6 flex justify-center mb-4" v-for="product in products" :key="product.id">
           <router-link :to="`/product/${product.id}`">
-            <div class="mb-4">
+            <div class="">
               <img
                 :src="product.imageUrl"
                 alt="Product Image"
@@ -45,7 +47,6 @@
           </router-link>
         </div>
       </div>
-    </div>
 
 
   </div>
