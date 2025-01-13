@@ -117,6 +117,7 @@ export default {
     ...mapGetters({
       isAuthenticated: "auth/isAuthenticated",
       getUser: "auth/getUser",
+      getFCM: "auth/getFCMToken",
     }),
     user() {
       return this.getUser || {};
@@ -170,6 +171,7 @@ export default {
           category: this.itemCategory,
           imageUrl,
           sellerId: this.user.username,
+          sellerFCMToken: this.getFCM,
           createdAt: new Date(),
         });
 

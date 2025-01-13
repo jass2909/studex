@@ -7,6 +7,8 @@ import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
 
+
+
 // Function to store FCM token
 function storeFCMToken(token, userId) {
   setDoc(doc(db, 'users', userId), {
@@ -48,6 +50,8 @@ store.dispatch('auth/initializeAuth').then(() => {
   
               // Store the FCM token with the user ID
               storeFCMToken(currentToken, user.uid);
+              // Add FCM Token to vuex store
+              store.dispatch('auth/setFCMToken', currentToken);
               
             } else {
               console.warn('No registration token available. Request permission to generate one.');
@@ -59,7 +63,7 @@ store.dispatch('auth/initializeAuth').then(() => {
         onMessage(messaging, (payload) => {
           console.log('Message received:', payload);
           // Optionally, you can display notifications or update your UI directly
-          alert(`Notification: ${payload.notification.title} - ${payload.notification.body}`);
+          console.log('Complete payload:', payload);
         });
       } else {
         console.warn('User is not authenticated.');

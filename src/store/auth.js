@@ -11,13 +11,18 @@ export default {
   namespaced: true,
   state: {
     user: null,
+    fcmToken: null,
   },
+
   mutations: {
     setUser(state, user) {
       state.user = user;
     },
     clearUser(state) {
       state.user = null;
+    },
+    setFCMToken(state, token) {
+      state.fcmToken = token;
     },
   },
   actions: {
@@ -83,7 +88,10 @@ export default {
       commit("clearUser");
       
     },
-  },
+    setFCMToken({ commit }, token) {
+      commit("setFCMToken", token);
+    }
+  }, 
   getters: {
     isAuthenticated(state) {
       return !!state.user;
@@ -93,6 +101,9 @@ export default {
     },
     getUserName(state) {
       return state.user ? state.user.username : null;
+    },
+    getFCMToken(state) {
+      return state.fcmToken;
     },
   },
 };

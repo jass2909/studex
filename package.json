@@ -10,6 +10,7 @@
   "dependencies": {
     "autoprefixer": "^10",
     "axios": "^1.7.9",
+    "cors": "^2.8.5",
     "firebase": "^11.1.0",
     "postcss": "^8",
     "tailwindcss": "^3",

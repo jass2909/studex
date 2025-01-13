@@ -4,7 +4,7 @@
 
     <!-- Loading indicator -->
     <div
-      v-if="outgoingOffers.length === 0 && incomingOffers.length === 0"
+      v-if="loading"
       class="text-center text-xl text-gray-500 flex justify-center items-center h-screen"
     >
       <div
@@ -36,7 +36,7 @@
         <button
           v-if="offer.status === 'Pending'"
           class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mx-2"
-          @click="cancelOffer(offer.id)"
+          @click="cancelOffer(offer.id, offer.sellerId)"
         >
           Cancel Offer
         </button>
@@ -59,15 +59,7 @@
           <strong
             >The Seller has accepted your offer, you can now propose a
             Meetup</strong
-          >
-        </p>
-        <button
-          v-if="offer.status === 'Accepted'"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mx-2"
-          @click="proposeMeetup(offer.id)"
-        >
-          Propose a Meetup
-        </button>
+          > </p> <button v-if="offer.status === 'Accepted'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mx-2" @click="proposeMeetup(offer.id)" > Propose a Meetup </button>
       </div>
     </div>
 
@@ -106,6 +98,7 @@
         </button>
       </div>
     </div>
+    <p v-if="!loading && outgoingOffers.length === 0 && incomingOffers.length === 0">No offers found</p>
   </div>
 </template>
 
@@ -122,17 +115,25 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 
+import { sendPushNotification } from "../notify";
+import { getSellerFCMToken } from "../utils/firebaseUtils";
+
 export default {
   data() {
     return {
       outgoingOffers: [],
       incomingOffers: [],
       loading: true,
+      sellerFCMToken: null,
     };
+  },
+  mounted() {
+    
   },
   computed: {
     ...mapGetters({
       getUser: "auth/getUser", // Assuming this provides the current user
+
     }),
   },
   watch: {
@@ -140,6 +141,14 @@ export default {
     getUser: "fetchOffers",
   },
   methods: {
+    async fetchSellerToken(sellerId) {
+      this.sellerFCMToken = await getSellerFCMToken(sellerId);
+      if (this.sellerFCMToken) {
+        console.log("Seller FCM Token:", this.sellerFCMToken);
+      } else {
+        console.warn("Seller FCM Token not found.");
+      }
+    },
     async fetchOffers() {
       // If user is not logged in, exit early
       if (!this.getUser) {
@@ -169,6 +178,9 @@ export default {
           id: doc.id,
           ...doc.data(),
         }));
+        if (this.incomingOffers.length === 0) {
+          this.loading = false;
+        }
       } catch (error) {
         console.error("Error fetching offers:", error);
         alert("Error fetching offers. Please try again later.");
@@ -196,10 +208,12 @@ export default {
         alert("Error declining offer. Please try again later.");
       }
     },
-    async cancelOffer(offerId) {
+    async cancelOffer(offerId, sellerId) {
       try {
         const offerRef = doc(db, "offers", offerId);
         await deleteDoc(offerRef);
+        this.sellerFCMToken = await getSellerFCMToken(sellerId);
+        sendPushNotification(this.sellerFCMToken, "Offer Cancelled", "The Buyer has cancelled the offer");
         this.fetchOffers();
       } catch (error) {
         console.error("Error cancelling offer:", error);
@@ -244,6 +258,7 @@ export default {
     // Call fetchOffers method initially to check if the user is already available
     this.fetchOffers();
   },
+
 };
 </script>
 

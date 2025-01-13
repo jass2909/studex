@@ -109,6 +109,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { sendPushNotification } from "@/notify";
 import {
   addDoc,
   collection,
@@ -119,6 +120,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "../firebase";
+import { getSellerFCMToken } from "@/utils/firebaseUtils";
 
 export default {
   data() {
@@ -132,7 +134,11 @@ export default {
       message: "",
       showModal: false,
       offerAmount: null,
+      sellerFCMToken: null,
     };
+  },
+  mounted() {
+    
   },
   computed: {
     ...mapGetters({
@@ -163,6 +169,15 @@ export default {
       setTimeout(() => {
         this.showMessage = false;
       }, 3000);
+    },
+    async fetchSellerToken() {
+      const sellerId = this.product.sellerId; // Replace with your actual sellerId
+      this.sellerFCMToken = await getSellerFCMToken(sellerId);
+      if (this.sellerFCMToken) {
+        console.log("Seller FCM Token:", this.sellerFCMToken);
+      } else {
+        console.warn("Seller FCM Token not found.");
+      }
     },
     async makeOffer() {
       if (!this.isAuthenticated) {
@@ -226,6 +241,12 @@ export default {
         this.loading = false;
         this.triggerMessage("success", "Offer placed successfully!");
         this.closeModal();
+        this.sellerFCMToken = await getSellerFCMToken(this.product.sellerId);
+        await sendPushNotification(
+          this.sellerFCMToken,
+          `You have a new offer for your product!`,
+          `${this.getUser.username} has made an offer for your product "${this.product.name}".`
+        );
       } catch (error) {
         console.error("Error placing offer:", error);
         this.triggerMessage(

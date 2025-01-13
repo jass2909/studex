@@ -1,4 +1,5 @@
 <template>
+  
   <nav
     class="bg-gray-800 text-white p-4 flex items-center justify-between fixed top-5 left-1/2 transform -translate-x-1/2 w-[90%] max-w-[800px] z-10 rounded-md shadow-lg"
   >
@@ -179,6 +180,7 @@
       </button>
     </div>
   </nav>
+  <NotificationPopUp ref="notificationPopUp" />
   <div class="container mx-auto p-4">
     <RouterView class="mt-24" />
   </div>
@@ -219,12 +221,22 @@ nav {
 <script>
 import { RouterView } from "vue-router";
 import { mapGetters, mapActions } from "vuex";
+import NotificationPopUp from "./views/NotificationPopUp.vue";
+import { messaging } from "./firebase";
+import { onMessage } from "./firebase";
 
 export default {
   data() {
     return {
       isMenuOpen: false,
     };
+  },
+  components: {
+    RouterView,
+    NotificationPopUp,
+  },
+  mounted() {
+    this.initializeFCM();
   },
   computed: {
     ...mapGetters({
@@ -253,6 +265,19 @@ export default {
       } catch (error) {
         console.error("Logout failed:", error);
       }
+    },
+    initializeFCM() {
+      // Listen for foreground messages
+      onMessage(messaging, (payload) => {
+        console.log("Message received:", payload);
+        console.log("Complete payload:", payload);
+        
+        // Access the Notification component and show the notification
+        this.$refs.notificationPopUp.showNotification(
+          payload.notification.title,
+          payload.notification.body
+        );
+      });
     },
   },
 };
