@@ -9,30 +9,16 @@
     <div v-if="isAuthenticated" class="bg-white shadow-md rounded-lg p-6">
       <form @submit.prevent="handleUpload" class="space-y-4">
         <!-- Item Name -->
-        <input
-          type="text"
-          v-model="itemName"
-          placeholder="Item Name"
-          required
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <input type="text" v-model="itemName" placeholder="Item Name" required
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
         <!-- Price -->
-        <input
-          type="number"
-          v-model="itemPrice"
-          placeholder="Price (€)"
-          required
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <input type="number" v-model="itemPrice" placeholder="Price (€)" required
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
         <!-- Category -->
-        <select
-          v-model="itemCategory"
-          required
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          
-        >
+        <select v-model="itemCategory" required
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="" disabled selected>Select Category</option>
           <option value="Electronics">Electronics</option>
           <option value="Clothing">Clothing</option>
@@ -42,37 +28,22 @@
         </select>
 
         <!-- Description -->
-        <input
-          type="text"
-          v-model="itemDescription"
-          placeholder="Description"
-          required
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <input type="text" v-model="itemDescription" placeholder="Description" required
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-        <!-- Location -->
-        <input
-          type="text"
-          v-model="itemLocation"
-          placeholder="Location (City and Postal Code)"
-          required
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <!-- City -->
+        <input type="text" v-model="itemCity" placeholder="City Name" required
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <!-- Postal Code -->
+        <input type="text" v-model="itemPostalCode" placeholder="Postal Code" required
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
         <!-- File Upload -->
-        <input
-          type="file"
-          @change="onFileChange"
-          accept="image/*"
-          required
-          class="w-full border rounded-md py-2 px-4 cursor-pointer"
-        />
+        <input type="file" @change="onFileChange" accept="image/*"
+          class="w-full border rounded-md py-2 px-4 cursor-pointer" />
 
         <!-- Submit Button -->
-        <button
-          type="submit"
-          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
-        >
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
           Upload Item
         </button>
       </form>
@@ -97,7 +68,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { db } from "@/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import axios from "axios"; // Make sure to import axios for HTTP requests
 
 export default {
@@ -106,11 +77,14 @@ export default {
       itemName: "",
       itemPrice: "",
       itemDescription: "",
-      itemLocation: "",
+      itemCity: "",
+      itemPostalCode: "",
       itemCategory: "",
       file: null,
       uploadSuccess: false,
       uploadError: "",
+      defaultImageUrl: "https://placehold.co/400?text=No+Image+Available",
+      imageUrl: null,
     };
   },
   computed: {
@@ -155,33 +129,42 @@ export default {
 
     async handleUpload() {
       try {
-        if (!this.file) {
-          throw new Error("Please select an image to upload.");
+
+        if (this.file) {
+          // Upload image to ImgBB
+          this.imageUrl = await this.uploadToImgBB(this.file);
+        } else {
+          // Use the default image URL
+          this.imageUrl = this.defaultImageUrl;
         }
 
-        // Upload image to ImgBB
-        const imageUrl = await this.uploadToImgBB(this.file);
+        // Generate the custom ID
+        const customId = `${this.user.username}-${this.itemName.replace(/\s/g, '-')}`;
 
         // Save item details in Firestore
-        const docRef = await addDoc(collection(db, "items"), {
+        await setDoc(doc(db, "items", customId), {
+          id: customId,
           name: this.itemName,
           price: this.itemPrice,
           description: this.itemDescription,
-          location: this.itemLocation,
+          city: this.itemCity,
+          postalCode: this.itemPostalCode,
           category: this.itemCategory,
-          imageUrl,
+          imageUrl: this.imageUrl,
           sellerId: this.user.username,
-          sellerFCMToken: this.getFCM,
           createdAt: new Date(),
         });
 
         // Create the new product object
         const newProduct = {
-          id: docRef.id, // Use Firestore document ID
+          id: customId,
           name: this.itemName,
           price: this.itemPrice,
           description: this.itemDescription,
-          imageUrl,
+          city: this.itemCity,
+          postalCode: this.itemPostalCode,
+          category: this.itemCategory,
+          imageUrl: this.imageUrl,
           sellerId: this.user.username,
           createdAt: new Date(),
         };
@@ -201,7 +184,7 @@ export default {
         console.error("Upload failed:", error.message);
         this.uploadError = error.message;
       }
-    },
+    }
   },
 };
 </script>

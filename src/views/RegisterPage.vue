@@ -76,7 +76,7 @@ export default {
         password: this.password,
         username: this.username,
       });
-      this.$router.push("/login");
+      this.$router.push("/");
     } catch (error) {
       this.error = error.message; // Display error in the component
       console.error("Registration failed:", error);

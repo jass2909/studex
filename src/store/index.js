@@ -18,6 +18,17 @@ export default createStore({
     setProductsFetched(state, status) {
       state.productsFetched = status;
     },
+    setProductsByUserName(state, { username, products }) {
+      state.productsByUserName = state.productsByUserName || {};
+      state.productsByUserName[username] = products;
+    },
+    removeProduct(state, productId) {
+      state.products = state.products.filter(product => product.id !== productId);
+      for (const username in state.productsByUserName) {
+        state.productsByUserName[username] = state.productsByUserName[username].filter(product => product.id !== productId);
+      }
+      state.productsFetched = false; // Set productsFetched to false after deleting a product
+    },
   },
   actions: {
     async fetchProducts({ state, commit }) {
@@ -49,7 +60,6 @@ export default createStore({
     getProductById: (state) => (id) =>
       state.products.find((product) => product.id === id),
     getProductsByUserName: (state) => (username) =>
-      state.products.filter((product) => product.sellerId === username),
+      state.productsByUserName?.[username] || [],
   },
-
 });

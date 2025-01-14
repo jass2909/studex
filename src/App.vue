@@ -18,14 +18,7 @@
         Go back
       </button>
     </div>
-    <div>
-      <router-link
-        v-if="isAuthenticated"
-        :to="{ name: 'profile', params: { uid: user.uid } }"
-        class="text-gray-300 hover:text-white"
-        >My Profile</router-link
-      >
-    </div>
+
 
     <!-- Mobile Hamburger Menu Icon -->
     <div class="lg:hidden flex items-center">
@@ -89,6 +82,14 @@
         class="text-gray-300 hover:text-white block"
         >My Offers</router-link
       >
+      <div>
+      <router-link
+        v-if="isAuthenticated"
+        :to="{ name: 'profile', params: { uid: user.uid } }"
+        class="text-gray-300 hover:text-white"
+        >My Profile</router-link
+      >
+    </div>
 
       <!-- Show logout link if user is authenticated -->
       <button
@@ -98,6 +99,7 @@
       >
         Logout
       </button>
+   
     </div>
 
     <!-- Mobile Navbar Links -->
