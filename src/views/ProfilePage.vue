@@ -1,7 +1,8 @@
 <template>
   <div class="container mx-auto py-8">
     <!-- Profile Header -->
-    <div v-if="user" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+     <div v-if="!user">Loading</div>
+    <div v-else="user" class="bg-white rounded-lg shadow-lg p-6 mb-8">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-3xl font-semibold text-gray-900 mb-2">
@@ -16,21 +17,64 @@
         </div>
         <div>
           <button
-            class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300">
+            class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300"
+          >
             Edit Profile
           </button>
         </div>
       </div>
     </div>
 
-    <div class="text-4xl font-bold text-center text-gray-800 mb-6">
-      <h1>My Items</h1>
+    <!-- Tabs -->
+    <div class="flex justify-center mb-6 mx-4">
+      <div class="bg-white rounded-lg shadow-lg p-2">
+        <button
+          class="px-4 py-2 rounded-lg transition-colors duration-300"
+          :class="{
+            'bg-blue-500 text-white': activeTab === 'items',
+            'hover:bg-gray-200': activeTab !== 'items',
+          }"
+          @click="activeTab = 'items'"
+        >
+          Items
+        </button>
+        <button
+          class="px-4 py-2 rounded-lg transition-colors duration-300"
+          :class="{
+            'bg-blue-500 text-white': activeTab === 'offers',
+            'hover:bg-gray-200': activeTab !== 'offers',
+          }"
+          @click="activeTab = 'offers'"
+        >
+          Offers
+        </button>
+        <button
+          class="px-4 py-2 rounded-lg transition-colors duration-300"
+          :class="{
+            'bg-blue-500 text-white': activeTab === 'reviews',
+            'hover:bg-gray-200': activeTab !== 'reviews',
+          }"
+          @click="activeTab = 'reviews'"
+        >
+          Reviews
+        </button>
+      </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="product in products" :key="product.id"
-        class="bg-white rounded-lg shadow-lg p-4 flex flex-col justify-between">
-        <router-link :to="`/product/${product.id}`" class="flex-grow">
+    <!-- Items -->
+    <div v-if="activeTab === 'items'">
+      <div class="text-4xl font-bold text-center text-gray-800 mb-6">
+        <h1>My Items</h1>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          v-for="product in products"
+          :key="product.id"
+          class="bg-white rounded-lg shadow-lg p-4 flex flex-col justify-between"
+        >
+          <!-- Product card content -->
+          <router-link :to="`/product/${product.id}`" class="flex-grow">
           <div class="mb-4">
             <img :src="product.imageUrl" alt="Product Image" class="w-full h-64 object-contain rounded-md" />
           </div>
@@ -39,7 +83,7 @@
               {{ product.name }}
             </span>
             <span class="text-gray-600 mb-2">€{{ product.price }}</span>
-            <span class="text-gray-600">Location: {{ product.location }}</span>
+            <span class="text-gray-600">Location: {{ product.city }}, {{ product.postalCode }}</span>
           </div>
         </router-link>
         <button
@@ -47,11 +91,30 @@
           @click="showDeleteModal = true; itemToDelete = product">
           Delete
         </button>
+
+        </div>
       </div>
     </div>
 
-    <!-- Confirmation Modal -->
-    <div v-if="showDeleteModal" class="fixed z-10 inset-0 overflow-y-auto">
+    <!-- Offers -->
+    <div v-if="activeTab === 'offers'">
+      <div class="text-4xl font-bold text-center text-gray-800 mb-6">
+        <h1>My Offers</h1>
+      </div>
+        <OffersPage></OffersPage>
+      <!-- Offer content goes here -->
+    </div>
+
+    <!-- Reviews -->
+    <div v-if="activeTab === 'reviews'">
+      <div class="text-4xl font-bold text-center text-gray-800 mb-6">
+        <h1>My Reviews</h1>
+      </div>
+
+      <!-- Review content goes here -->
+    </div>
+     <!-- Confirmation Modal -->
+     <div v-if="showDeleteModal" class="fixed z-10 inset-0 overflow-y-auto">
       <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 transition-opacity" aria-hidden="true">
           <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -99,12 +162,14 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import { db } from "@/firebase";
+import OffersPage from "./OffersPage.vue";
 import { collection, getDocs, doc, getDoc, where, query, deleteDoc, writeBatch } from "firebase/firestore";
 
 export default {
@@ -113,9 +178,14 @@ export default {
       user: null,
       products: [],
       itemToDelete: null,
-      showDeleteModal: false
+      showDeleteModal: false,
+      activeTab: "items",
+      
     };
 
+  },
+  components: {
+    OffersPage
   },
   computed: {
     ...mapGetters(["getProductsByUserName"]

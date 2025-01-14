@@ -1,22 +1,19 @@
 <template>
   <div class="container mt-10 p-4">
-    <div v-if="products.length < 0"
+    <div v-if="loading"
       class="text-center text-xl text-gray-500 flex justify-center items-center h-screen">
       <div
         class="loader border-t-2 rounded-full border-green-500 bg-black animate-spin aspect-square w-20 flex justify-center items-center text-white">
         Studex
       </div>
     </div>
-    <p v-if="products.length === 0">No products yet</p>
-    <!-- Authentication Message -->
-    <div v-if="!isAuthenticated" class="text-center text-red-500 text-lg mb-4">
-      You must be logged in to view this page.
-      <router-link to="/login" class="text-blue-500 hover:underline">Login</router-link>
-    </div>
+    
+
 
     <!-- Product List -->
     <transition-group name="fade" tag="div" appear>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div v-if="isAuthenticated"><h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Welcome to Studex, {{ user.username }}</h1></div>
         <div v-for="product in products" :key="product.id"
           class="border rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
           <router-link :to="`/product/${product.id}`" class="text-lg font-medium text-gray-700 hover:text-blue-500">
@@ -46,14 +43,22 @@ export default {
   data() {
     return {
       products: [],
+      loading: true,
       
     };
   },
   computed: {
     // Map products from the main store
     ...mapGetters(["allProducts"]),
+    ...mapGetters({
+      getUser: "auth/getUser"
+    }),
+    user() {
+      return this.getUser || {};
+    },
 
     products() {
+      
       return this.allProducts;
     },
 
@@ -63,7 +68,13 @@ export default {
     },
   },
   created() {
-    this.fetchProducts();
+    this.fetchProducts().then(() => {
+      this.loading = false; // Set loading to false once products are fetched
+      console.log(this.loading)
+    }).catch(error => {
+      console.error('Failed to fetch products:', error);
+      this.loading = false; // Ensure loading is false in case of an error
+    });
   },
   methods: {
     // Map fetchProducts action
