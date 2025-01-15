@@ -1,39 +1,48 @@
 <template>
-  <div class="container mt-10 p-4">
-    <div v-if="loading"
-      class="text-center text-xl text-gray-500 flex justify-center items-center h-screen">
+  <div v-if="isAuthenticated">
+    <h1 class="text-4xl font-bold text-center text-gray-800 mb-6 lg:hidden">
+      Welcome to Studex, {{ user.username }}
+    </h1>
+  </div>
+  <div class="container mt-14 p-4">
+    <div
+      v-if="loading"
+      class="text-center text-xl text-gray-500 flex justify-center items-center h-screen"
+    >
       <div
-        class="loader border-t-2 rounded-full border-green-500 bg-black animate-spin aspect-square w-20 flex justify-center items-center text-white">
+        class="loader border-t-2 rounded-full border-green-500 bg-black animate-spin aspect-square w-20 flex justify-center items-center text-white"
+      >
         Studex
       </div>
     </div>
-    
 
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        v-for="product in products"
+        :key="product.id"
+        class="border rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow mt-4"
+      >
+        <router-link
+          :to="`/product/${product.id}`"
+          class="text-lg font-medium text-gray-700 hover:text-blue-500"
+        >
+          <div class="mb-4">
+            <img
+              :src="product.imageUrl"
+              alt="Product Image"
+              class="w-full h-64 object-contain rounded-mg"
+            />
+          </div>
 
-    <!-- Product List -->
-    <transition-group name="fade" tag="div" appear>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div v-if="isAuthenticated"><h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Welcome to Studex, {{ user.username }}</h1></div>
-        <div v-for="product in products" :key="product.id"
-          class="border rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
-          <router-link :to="`/product/${product.id}`" class="text-lg font-medium text-gray-700 hover:text-blue-500">
-            <div class="mb-4">
-              <img :src="product.imageUrl" alt="Product Image" class="w-full h-64 object-contain rounded-mg"
-                 />
-            </div>
-           
-            <div class="flex flex-col">
-              <span class="font-semibold text-gray-800">{{ product.name }}</span>
-              <span class="text-gray-600">€{{ product.price }}</span>
-              <span class="text-gray-600">Location: {{ product.city }}</span>
-            </div>
-          </router-link>
-        </div>
+          <div class="flex flex-col">
+            <span class="font-semibold text-gray-800">{{ product.name }}</span>
+            <span class="text-gray-600">€{{ product.price }}</span>
+            <span class="text-gray-600">Location: {{ product.city }}</span>
+          </div>
+        </router-link>
       </div>
-    </transition-group>
-
+    </div>
   </div>
-
 </template>
 
 <script>
@@ -44,21 +53,19 @@ export default {
     return {
       products: [],
       loading: true,
-      
     };
   },
   computed: {
     // Map products from the main store
     ...mapGetters(["allProducts"]),
     ...mapGetters({
-      getUser: "auth/getUser"
+      getUser: "auth/getUser",
     }),
     user() {
       return this.getUser || {};
     },
 
     products() {
-      
       return this.allProducts;
     },
 
@@ -68,13 +75,15 @@ export default {
     },
   },
   created() {
-    this.fetchProducts().then(() => {
-      this.loading = false; // Set loading to false once products are fetched
-      console.log(this.loading)
-    }).catch(error => {
-      console.error('Failed to fetch products:', error);
-      this.loading = false; // Ensure loading is false in case of an error
-    });
+    this.fetchProducts()
+      .then(() => {
+        this.loading = false; // Set loading to false once products are fetched
+        console.log(this.loading);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch products:", error);
+        this.loading = false; // Ensure loading is false in case of an error
+      });
   },
   methods: {
     // Map fetchProducts action

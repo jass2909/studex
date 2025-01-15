@@ -1,23 +1,23 @@
 <template>
   <div class="container mx-auto py-8">
     <!-- Profile Header -->
-     <div v-if="!user">Loading</div>
-    <div v-else="user" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-3xl font-semibold text-gray-900 mb-2">
-            {{ user.username }}
+            {{ user?.username || "Loading..." }}
           </h2>
           <p class="text-lg text-gray-700">
-            <strong>City:</strong> {{ user.city }}
+            <strong>City:</strong> {{ user?.city || "Loading..." }}
           </p>
           <p class="text-lg text-gray-700">
-            <strong>Bio:</strong> {{ user.bio }}
+            <strong>Bio:</strong> {{ user?.bio || "Loading..." }}
           </p>
         </div>
         <div>
           <button
             class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300"
+            :disabled="!user"
           >
             Edit Profile
           </button>
@@ -66,32 +66,35 @@
       <div class="text-4xl font-bold text-center text-gray-800 mb-6">
         <h1>My Items</h1>
       </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+     
+      <div  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
           v-for="product in products"
           :key="product.id"
           class="bg-white rounded-lg shadow-lg p-4 flex flex-col justify-between"
         >
-          <!-- Product card content -->
           <router-link :to="`/product/${product.id}`" class="flex-grow">
-          <div class="mb-4">
-            <img :src="product.imageUrl" alt="Product Image" class="w-full h-64 object-contain rounded-md" />
-          </div>
-          <div class="flex flex-col">
-            <span class="font-semibold text-gray-800 mb-2">
-              {{ product.name }}
-            </span>
-            <span class="text-gray-600 mb-2">€{{ product.price }}</span>
-            <span class="text-gray-600">Location: {{ product.city }}, {{ product.postalCode }}</span>
-          </div>
-        </router-link>
-        <button
-          class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 mt-4"
-          @click="showDeleteModal = true; itemToDelete = product">
-          Delete
-        </button>
-
+            <div class="mb-4">
+              <img
+                :src="product.imageUrl"
+                alt="Product Image"
+                class="w-full h-64 object-contain rounded-md"
+              />
+            </div>
+            <div class="flex flex-col">
+              <span class="font-semibold text-gray-800 mb-2">
+                {{ product.name }}
+              </span>
+              <span class="text-gray-600 mb-2">€{{ product.price }}</span>
+              <span class="text-gray-600">Location: {{ product.city }}, {{ product.postalCode }}</span>
+            </div>
+          </router-link>
+          <button
+            class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 mt-4"
+            @click="showDeleteModal = true; itemToDelete = product"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -101,8 +104,8 @@
       <div class="text-4xl font-bold text-center text-gray-800 mb-6">
         <h1>My Offers</h1>
       </div>
-        <OffersPage></OffersPage>
-      <!-- Offer content goes here -->
+      
+      <OffersPage/>
     </div>
 
     <!-- Reviews -->
@@ -110,11 +113,14 @@
       <div class="text-4xl font-bold text-center text-gray-800 mb-6">
         <h1>My Reviews</h1>
       </div>
-
-      <!-- Review content goes here -->
+      
+      <div >
+        <!-- Add review content here -->
+      </div>
     </div>
-     <!-- Confirmation Modal -->
-     <div v-if="showDeleteModal" class="fixed z-10 inset-0 overflow-y-auto">
+
+    <!-- Confirmation Modal -->
+    <div v-if="showDeleteModal" class="fixed z-10 inset-0 overflow-y-auto">
       <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 transition-opacity" aria-hidden="true">
           <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -162,8 +168,8 @@
         </div>
       </div>
     </div>
-
-  </div>
+    </div>
+  
 </template>
 
 <script>
@@ -180,6 +186,8 @@ export default {
       itemToDelete: null,
       showDeleteModal: false,
       activeTab: "items",
+      reviews: [],
+      offers: [],
       
     };
 
@@ -214,6 +222,7 @@ export default {
         console.error("Failed to fetch user data:", error);
       }
     },
+  
     async fetchProducts() {
       try {
         const q = query(collection(db, "items"), where("sellerId", "==", this.user.username));

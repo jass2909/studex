@@ -24,11 +24,15 @@
         timer: null,
       };
     },
+    mounted() {
+      console.log("NotificationPopUp mounted");
+    },
     methods: {
       showNotification(title, body) {
         this.title = title;
         this.body = body;
         this.visible = true;
+        
   
         // Auto-hide after 5 seconds
         this.timer = setTimeout(() => {
@@ -50,4 +54,5 @@
   .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
     opacity: 0;
   }
+
   </style>

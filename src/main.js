@@ -60,11 +60,7 @@ store.dispatch('auth/initializeAuth').then(() => {
           .catch((err) => console.error('An error occurred while retrieving token:', err));
 
         // Handle foreground messages
-        onMessage(messaging, (payload) => {
-          console.log('Message received:', payload);
-          // Optionally, you can display notifications or update your UI directly
-          console.log('Complete payload:', payload);
-        });
+       
       } else {
         console.warn('User is not authenticated.');
       }

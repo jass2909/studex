@@ -5,11 +5,14 @@
       Product Details
     </h1>
     <!-- Message Container -->
-    <div v-if="showMessage"
-      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg" :class="{
+    <div
+      v-if="showMessage"
+      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg"
+      :class="{
         'bg-green-500': messageType === 'success',
         'bg-red-500': messageType === 'error',
-      }">
+      }"
+    >
       {{ message }}
     </div>
 
@@ -32,45 +35,125 @@
             <strong>Price:</strong> {{ product.price }} €
           </p>
           <!-- Make an offer button only if user is logged in and not the seller -->
-          <button v-if="getUser && getUser.username !== product.sellerId"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" @click="openOfferModal">
+          <button
+            v-if="getUser && getUser.username !== product.sellerId"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+            @click="openOfferModal"
+          >
             Make an Offer
           </button>
         </div>
 
         <!-- Image section (right side) -->
         <div v-if="product.imageUrl" class="md:w-1/3 mb-4 md:mb-0 md:ml-6">
-          <img :src="product.imageUrl" alt="Product Image" class="w-full max-w-xs mx-auto rounded-lg" />
+          <img
+            :src="product.imageUrl"
+            alt="Product Image"
+            class="w-full max-w-xs mx-auto rounded-lg"
+          />
         </div>
       </div>
     </div>
     <!-- Modal for entering offer amount -->
-    <div v-if="showModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-      <div class="bg-white p-6 rounded-lg w-full max-w-xs md:max-w-md lg:max-w-lg mx-4">
+    <div
+      v-if="showModal"
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50"
+    >
+      <div
+        class="bg-white p-6 rounded-lg w-full max-w-xs md:max-w-md lg:max-w-lg mx-4"
+      >
         <h2 class="text-2xl mb-4 text-center md:text-left">
           Enter Your Offer Amount
         </h2>
-        <input v-model="offerAmount" type="number" min="1" step="0.01" placeholder="Enter amount"
-          class="border border-gray-300 rounded-lg w-full p-2 mb-4" />
+        <input
+          v-model="offerAmount"
+          type="number"
+          min="1"
+          step="0.01"
+          placeholder="Enter amount"
+          class="border border-gray-300 rounded-lg w-full p-2 mb-4"
+        />
         <div class="flex justify-between">
-          <button class="bg-gray-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:mr-2" @click="closeModal">
+          <button
+            class="bg-gray-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:mr-2"
+            @click="closeModal"
+          >
             Cancel
           </button>
-          <button class="bg-blue-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:ml-2" @click="makeOffer">
-            Submit Offer
+          <button
+            class="bg-blue-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:ml-2"
+            @click="makeOffer"
+          >
+            <p v-if="loadingOffer">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 animate-spin"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    d="M12 1V5"
+                    stroke="#33495d"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M19.4246 18.9246L16.5961 16.0962"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M22.5 11.5L18.5 11.5"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M12 18V22"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M7.40381 6.90381L4.57538 4.07538"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M5.5 11.5L1.5 11.5"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M7.40381 16.0962L4.57538 18.9246"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                </g>
+              </svg>
+            </p>
+            <p v-else>Make Offer</p>
           </button>
         </div>
-        <div v-if="loading">
-          <div
-            class="loader border-t-2 rounded-full border-green-500 bg-black animate-spin aspect-square w-20 flex justify-center items-center text-white">
-            Studex
-          </div>
-        </div>
+ 
       </div>
     </div>
-    <button v-if="$route.path.includes('product')"
+    <button
+      v-if="$route.path.includes('product')"
       class="text-lg font-semibold bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 fixed bottom-20 right-4 md:hidden"
-      @click="$router.go(-1)">
+      @click="$router.go(-1)"
+    >
       Go back
     </button>
 
@@ -112,11 +195,10 @@ export default {
       showModal: false,
       offerAmount: null,
       sellerFCMToken: null,
+      loadingOffer: false,
     };
   },
-  mounted() {
-
-  },
+  mounted() {},
   computed: {
     ...mapGetters({
       isAuthenticated: "auth/isAuthenticated",
@@ -157,6 +239,8 @@ export default {
       }
     },
     async makeOffer() {
+      this.loading = true;
+      this.loadingOffer = true;
       if (!this.isAuthenticated) {
         this.triggerMessage("error", "You must be logged in to make an offer.");
         this.closeModal();
@@ -176,6 +260,8 @@ export default {
             "You have already made an offer, please go to the offers page to edit or cancel it."
           );
           this.closeModal();
+          this.loadingOffer = false;
+          this.loading = false;
           return;
         }
       } catch (error) {
@@ -185,6 +271,8 @@ export default {
           "Error checking if offer exists. Please try again later."
         );
         this.closeModal();
+        this.loading = false;
+        this.loadingOffer = false;
         return;
       }
 
@@ -213,9 +301,10 @@ export default {
           createdAt: new Date(),
           status: "Pending",
         };
-        this.loading = true;
+  
         await addDoc(collection(db, "offers"), offerData);
         this.loading = false;
+        this.loadingOffer = false;
         this.triggerMessage("success", "Offer placed successfully!");
         this.closeModal();
         this.sellerFCMToken = await getSellerFCMToken(this.product.sellerId);
