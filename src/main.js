@@ -6,6 +6,7 @@ import './assets/tailwind.css';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
+import '../src/assets/styles/main.css';
 
 
 

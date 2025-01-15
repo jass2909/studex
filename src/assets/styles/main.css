@@ -61,18 +61,6 @@
   * @import "utilities/skew-transforms";
   */
   /* Import Tailwind's base styles (Normalize + base styles) */
-@import "tailwindcss/base";
-
-/* Import Tailwind's component classes (if you have any custom ones) */
-@import "tailwindcss/components";
-
-/* Custom component classes, for things like custom buttons, forms, etc. */
-@import "components/buttons";
-@import "components/forms";
-
-/* Import Tailwind's utility classes (these are generated based on your config) */
-@import "tailwindcss/utilities";
-
-/* You can also add any custom utilities you need */
-@import "utilities/background-patterns";
-@import "utilities/skew-transforms";
+ body {
+  background-color: #ececec;
+}
