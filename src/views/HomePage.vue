@@ -20,7 +20,7 @@
       <div
         v-for="product in products"
         :key="product.id"
-        class="border rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow mt-4"
+        class="border rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow mt-4 bg-white"
       >
         <router-link
           :to="`/product/${product.id}`"
