@@ -1,4 +1,5 @@
 <template>
+  <div class="w-full ">
   <div v-if="isAuthenticated">
     <h1 class="text-4xl font-bold text-center text-gray-800 mb-6 lg:hidden">
       Welcome to Studex, {{ user.username }}
@@ -20,7 +21,7 @@
       <div
         v-for="product in products"
         :key="product.id"
-        class="border rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow mt-4 bg-white"
+        class="border rounded-lg shadow-md p-4 hover:shadow-lg  mt-4 bg-white"
       >
         <router-link
           :to="`/product/${product.id}`"
@@ -52,6 +53,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -109,13 +111,5 @@ export default {
 };
 </script>
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
 
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
 </style>
