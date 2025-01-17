@@ -21,12 +21,21 @@
       <!-- Use a flex container for layout -->
       <div class="flex flex-col md:flex-row items-center md:items-start">
         <!-- Text section (left side) -->
-        <div class="md:w-2/3">
+        <div class="md:w-2/3 text-center md:text-left">
           <h2 class="text-3xl font-semibold text-gray-900 mb-4">
             {{ product.name }}
           </h2>
           <p class="text-lg text-gray-700 mb-4">
             <strong>Description:</strong> {{ product.description }}
+          </p>
+          <p class="text-lg text-gray-700">
+            <strong>Condition:</strong> {{ product.condition }}
+          </p>
+          <p class="text-lg text-gray-700">
+            <strong>Category:</strong> {{ product.category }}
+          </p>
+          <p class="text-lg text-gray-700">
+            <strong>Location:</strong> {{ product.city }}, <br> <strong>Postal Code:</strong>{{ product.postalCode }}
           </p>
           <p class="text-lg text-gray-700">
             <strong>Seller:</strong> {{ product.sellerId }}

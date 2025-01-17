@@ -27,6 +27,18 @@
           <option value="Books">Books</option>
         </select>
 
+        <!-- Condition -->
+        <select v-model="itemCondition" required
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>Select Condition</option>
+          <option value="New">New</option>
+          <option value="Used">Used</option>
+          <option value="Refurbished">Refurbished</option>
+          
+          <option value="Damaged">Damaged</option>
+
+        </select>
+
         <!-- Description -->
         <input type="text" v-model="itemDescription" placeholder="Description" required
           class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -85,6 +97,7 @@ export default {
       uploadError: "",
       defaultImageUrl: "https://placehold.co/400?text=No+Image+Available",
       imageUrl: null,
+      itemCondition: "",
     };
   },
   computed: {
@@ -153,6 +166,7 @@ export default {
           imageUrl: this.imageUrl,
           sellerId: this.user.username,
           createdAt: new Date(),
+          condition: this.itemCondition
         });
 
         // Create the new product object
@@ -167,6 +181,7 @@ export default {
           imageUrl: this.imageUrl,
           sellerId: this.user.username,
           createdAt: new Date(),
+          condition: this.itemCondition
         };
 
         // Directly add the product to the Vuex store
@@ -180,6 +195,12 @@ export default {
         this.itemPrice = "";
         this.itemDescription = "";
         this.file = null;
+        this.imageUrl = null;
+        this.itemCity = "";
+        this.itemPostalCode = "";
+        this.itemCategory = "";
+        this.itemCondition = "";
+        
       } catch (error) {
         console.error("Upload failed:", error.message);
         this.uploadError = error.message;

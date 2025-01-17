@@ -34,11 +34,20 @@
             />
           </div>
 
-          <div class="flex flex-col">
+          <div class="flex flex-col ">
             <span class="font-semibold text-gray-800">{{ product.name }}</span>
-            <span class="text-gray-600">€{{ product.price }}</span>
+            <span class="text-gray-600"><strong>Price: </strong>€{{ product.price }}</span>
+            <span class="text-gray-600">Condition: {{ product?.condition || "N/A" }}</span>
             <span class="text-gray-600">Location: {{ product.city }}</span>
           </div>
+          <button class="mt-4">
+            <router-link
+              :to="`/product/${product.id}`"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+            >
+              View Details
+            </router-link>
+          </button>
         </router-link>
       </div>
     </div>
