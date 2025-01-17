@@ -213,6 +213,9 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-top: 20px; /* Header Bar was covering the container -> Better looks */
+}
 .error {
   color: red;
 }

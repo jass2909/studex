@@ -35,7 +35,7 @@
             <strong>Category:</strong> {{ product.category }}
           </p>
           <p class="text-lg text-gray-700">
-            <strong>Location:</strong> {{ product.city }}, <br> <strong>Postal Code:</strong>{{ product.postalCode }}
+            <strong>Location:</strong> {{ product.city }} <br> <strong>Postal Code: </strong>{{ product.postalCode }}
           </p>
           <p class="text-lg text-gray-700">
             <strong>Seller:</strong> {{ product.sellerId }}
