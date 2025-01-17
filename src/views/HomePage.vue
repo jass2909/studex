@@ -1,4 +1,5 @@
 <template>
+  <div class="w-full ">
   <div v-if="isAuthenticated">
     <h1 class="text-4xl font-bold text-center text-gray-800 mb-6 lg:hidden">
       Welcome to Studex, {{ user.username }}
@@ -20,7 +21,7 @@
       <div
         v-for="product in products"
         :key="product.id"
-        class="border rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow mt-4 bg-white"
+        class="border rounded-lg shadow-md p-4 hover:shadow-lg  mt-4 bg-white"
       >
         <router-link
           :to="`/product/${product.id}`"
@@ -34,15 +35,25 @@
             />
           </div>
 
-          <div class="flex flex-col">
+          <div class="flex flex-col ">
             <span class="font-semibold text-gray-800">{{ product.name }}</span>
-            <span class="text-gray-600">€{{ product.price }}</span>
+            <span class="text-gray-600"><strong>Price: </strong>€{{ product.price }}</span>
+            <span class="text-gray-600">Condition: {{ product?.condition || "N/A" }}</span>
             <span class="text-gray-600">Location: {{ product.city }}</span>
           </div>
+          <button class="mt-4">
+            <router-link
+              :to="`/product/${product.id}`"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+            >
+              View Details
+            </router-link>
+          </button>
         </router-link>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -100,13 +111,5 @@ export default {
 };
 </script>
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
 
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
 </style>
