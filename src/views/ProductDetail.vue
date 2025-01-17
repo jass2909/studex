@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="container mt-4 p-4">
     <!-- Product Title -->
     <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">
       Product Details

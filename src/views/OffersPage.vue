@@ -1,17 +1,10 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="container mx-auto p-4 flex justify-center">
 
 
-    <!-- Loading indicator -->
-    <div v-if="loading" class="text-xl text-gray-500 flex justify-center mt-4">
-      <div
-        class="loader border-t-2 rounded-full border-green-500 bg-black animate-spin aspect-square w-20 flex justify-center items-center text-white">
-        Studex
-      </div>
-    </div>
-
-    <!-- Outgoing Offers -->
-    <div v-if="outgoingOffers.length > 0" class="mb-8 animate-fade">
+    <div class="flex flex-col md:flex-row justify-between">
+       <!-- Outgoing Offers -->
+    <div v-if="outgoingOffers.length > 0" class="mb-8 mx-6 ">
       <h2 class="text-2xl font-semibold text-gray-900 mb-4">Outgoing Offers</h2>
       <div v-for="offer in outgoingOffers" :key="offer.id" class="bg-white rounded-lg shadow-lg p-4 mb-4">
         <p><strong>Product:</strong> {{ offer.productName }}</p>
@@ -42,14 +35,72 @@
         <p v-if="offer.status === 'Accepted'" class="text-green-500 mt-4">
           <strong>The Seller has accepted your offer, you can now propose a
             Meetup</strong>
-        </p> <button v-if="offer.status === 'Accepted'"
+        </p>
+        <p v-if="offer.status === 'Meetup Proposed'" class="text-yellow-500 mt-4'">
+          <strong>Meetup has been proposed, waiting for the seller to accept</strong>
+        </p>
+        <button v-if="offer.status === 'Accepted'"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mx-2"
-          @click="proposeMeetup(offer.id)"> Propose a Meetup </button>
+          @click="MeetupId = offer.id, showMeetupPlaceModal = true"> Propose a Meetup </button>
+      </div>
+      <div v-if="showMeetupPlaceModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title"
+        role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+          <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"
+            @click="showMeetupPlaceModal = false"></div>
+
+          <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+          <div
+            class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div
+                  class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                  <svg class="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                  <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                    Select a Meetup Place
+                  </h3>
+                  <div class="mt-2">
+                    <select v-model="selectedMeetupPlace"
+                      class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option v-for="place in meetupPlaces" :key="place.id" :value="place">
+                        {{ place.name }} ({{ place.address }})
+                      </option>
+                    </select>
+                  </div>
+                  <div class="mt-2">
+                    <input type="datetime-local" v-model="selectedMeetupDateTime"
+                      class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <button type="button"
+                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                @click="updateOfferWithMeetupPlace(MeetupId, selectedMeetupPlace, selectedMeetupDateTime)">
+                Propose Meetup
+              </button>
+              <button type="button"
+                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                @click="showMeetupPlaceModal = false">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Incoming Offers -->
-    <div v-if="incomingOffers.length > 0" class="mb-8 animate-fadeIn">
+    <div v-if="incomingOffers.length > 0" class="mb-8 ">
       <h2 class="text-2xl font-semibold text-gray-900 mb-4">Incoming Offers</h2>
       <div v-for="offer in incomingOffers" :key="offer.id" class="bg-white rounded-lg shadow-lg p-4 mb-4">
         <p><strong>Product:</strong> {{ offer.productName }}</p>
@@ -61,6 +112,25 @@
             a Meetup
           </strong>
         </p>
+        <p v-if="offer.status === 'Meetup Proposed'" class="text-yellow-500 mt-4">
+          <strong>The seller has proposed a Meetup, please review the details.
+          </strong> <br>
+          <strong>Meetup Place:</strong> {{ offer.meetupPlace.address }} <br>
+          <strong>Meetup Date & Time:</strong> {{ formatMeetupDateTime(offer.meetUpDateAndTime) }} <br>
+          <strong>If this Meet-Up proposal is not suitable for you, please decline the offer.</strong>
+
+        </p>
+        <div class="flex justify-center items-center">
+          <button v-if="offer.status === 'Meetup Proposed'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mx-4">
+          Accept Porposal
+        </button>
+          <button v-if="offer.status === 'Meetup Proposed'"
+            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
+            @click="deleteOffer(offer.id)">
+            Decline Porposal
+        </button>
+        </div>
+      
 
         <button v-if="offer.status === 'Pending'"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
@@ -74,7 +144,10 @@
         </button>
       </div>
     </div>
-    <p v-if="!loading && outgoingOffers.length === 0 && incomingOffers.length === 0">No offers found</p>
+    </div>
+
+   
+ 
   </div>
 </template>
 
@@ -90,10 +163,12 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
+import meetupPlaces from '@/data/meetup-places.json';
 
 import { sendPushNotification } from "../notify";
 import { getSellerFCMToken } from "../utils/firebaseUtils";
-
+import dayjs from 'dayjs';
+import 'dayjs/locale/en';
 export default {
   data() {
     return {
@@ -101,6 +176,11 @@ export default {
       incomingOffers: [],
       loading: true,
       sellerFCMToken: null,
+      showMeetupPlaceModal: false,
+      selectedMeetupPlace: null,
+      selectedMeetupDateTime: null,
+      meetupPlaces: meetupPlaces,
+      MeetupId: null
     };
   },
   mounted() {
@@ -117,6 +197,10 @@ export default {
     getUser: "fetchOffers",
   },
   methods: {
+    formatMeetupDateTime(dateTimeString) {
+      const dateTime = dayjs(dateTimeString);
+      return `${dateTime.locale('en').format('dddd, MMMM D, YYYY - h:mm A')}`;
+    },
     async fetchSellerToken(sellerId) {
       this.sellerFCMToken = await getSellerFCMToken(sellerId);
       if (this.sellerFCMToken) {
@@ -221,12 +305,29 @@ export default {
     },
     async proposeMeetup(offerId) {
       try {
+        // Show the meetup place selection modal
+        await this.showMeetupPlaceSelector(offerId);
+      } catch (error) {
+        console.error("Error proposing meetup:", error);
+        alert("Error proposing meetup. Please try again later.");
+      }
+    },
+
+
+    async updateOfferWithMeetupPlace(offerId, meetupPlace, selectedMeetupDateTime) {
+      try {
         const offerRef = doc(db, "offers", offerId);
-        await updateDoc(offerRef, { status: "Accepted" });
+        await updateDoc(offerRef, {
+          status: "Meetup Proposed",
+          meetupPlace: meetupPlace,
+          meetUpDateAndTime: selectedMeetupDateTime.toISOString(),
+        });
+        console.log("Offer with meetup place updated successfully.");
+        this.showMeetupPlaceModal = false;
         this.fetchOffers();
       } catch (error) {
-        console.error("Error accepting offer:", error);
-        alert("Error accepting offer. Please try again later.");
+        console.error("Error updating offer with meetup place:", error);
+        alert("Error updating offer. Please try again later.");
       }
     },
   },
