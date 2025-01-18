@@ -142,7 +142,8 @@
 import { mapGetters } from "vuex";
 import { db } from "@/firebase";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
-import axios from "axios"; // Make sure to import axios for HTTP requests
+import axios from "axios";
+import Swal from "sweetalert2"; // Make sure to import axios for HTTP requests
 
 export default {
   data() {
@@ -265,10 +266,21 @@ export default {
         this.itemCondition = "";
 
         this.loading = false;
-        
+
+        await Swal.fire({
+          title: "Item uploaded successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
       } catch (error) {
         console.error("Upload failed:", error.message);
         this.uploadError = error.message;
+        await Swal.fire({
+          title: "Upload failed",
+          text: error.message,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       }
     }
   },

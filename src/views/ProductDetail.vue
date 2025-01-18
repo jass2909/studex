@@ -214,6 +214,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getSellerFCMToken } from "@/utils/firebaseUtils";
+import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -273,9 +274,19 @@ export default {
           ...product,
         });
         this.isInWishlist = true;
-        alert("Product added to wishlist!");
+        await Swal.fire({
+          icon: "Success",
+          title: "Added to Wishlist!",
+          showConfirmButton: true,
+          timer: 1500,
+        });
       } catch (error) {
         console.error("Error adding to wishlist:", error);
+        await Swal.fire({
+          icon: "Error",
+          title: "Error while adding to Wishlist",
+          text: error.message,
+        });
       }
     },
     async fetchWishlistStatus() {

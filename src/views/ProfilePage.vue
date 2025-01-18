@@ -335,6 +335,7 @@ import {
   updateDoc
 } from "firebase/firestore";
 import WishlistPage from "@/views/WishlistPage.vue";
+import Swal from "sweetalert2";
 
 
 export default {
@@ -460,8 +461,24 @@ export default {
         this.showDeleteModal = false;
         this.itemToDelete = null;
         this.loading = false;
+        // Show a success message
+        await Swal.fire({
+          icon: 'success',
+          title: 'Item deleted!',
+          text: 'Your item has been deleted successfully.',
+          timer: 3000,
+          showConfirmButton: false,
+        });
       } catch (error) {
         console.error("Error deleting item:", error);
+        // Show an error message
+        await Swal.fire({
+          icon: 'error',
+          title: 'Error deleting item',
+          text: 'An error occurred while deleting the item. Please try again later.',
+          timer: 3000,
+          showConfirmButton: false,
+        });
       }
     },
   },
