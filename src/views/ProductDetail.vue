@@ -6,9 +6,9 @@
     </h1>
     <!-- Message Container -->
     <div
-      v-if="showMessage"
-      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg"
-      :class="{
+        v-if="showMessage"
+        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg"
+        :class="{
         'bg-green-500': messageType === 'success',
         'bg-red-500': messageType === 'error',
       }"
@@ -53,9 +53,9 @@
             >
               Make an Offer
             </button>
-            <!-- Add to Wishlist button -->
+            <!-- Add to Wishlist button only if product is not in wishlist -->
             <button
-                v-if="getUser && getUser.username !== product.sellerId"
+                v-if="getUser && getUser.username !== product.sellerId && !isInWishlist"
                 class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
                 @click="addToWishlist(product)"
             >
@@ -79,98 +79,98 @@
         <!-- Image section (right side) -->
         <div v-if="product.imageUrl" class="md:w-1/3 mb-4 md:mb-0 md:ml-6">
           <img
-            :src="product.imageUrl"
-            alt="Product Image"
-            class="w-full max-w-xs mx-auto rounded-lg"
+              :src="product.imageUrl"
+              alt="Product Image"
+              class="w-full max-w-xs mx-auto rounded-lg"
           />
         </div>
       </div>
     </div>
     <!-- Modal for entering offer amount -->
     <div
-      v-if="showModal"
-      class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50"
+        v-if="showModal"
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50"
     >
       <div
-        class="bg-white p-6 rounded-lg w-full max-w-xs md:max-w-md lg:max-w-lg mx-4"
+          class="bg-white p-6 rounded-lg w-full max-w-xs md:max-w-md lg:max-w-lg mx-4"
       >
         <h2 class="text-2xl mb-4 text-center md:text-left">
           Enter Your Offer Amount
         </h2>
         <input
-          v-model="offerAmount"
-          type="number"
-          min="1"
-          step="0.01"
-          placeholder="Enter amount"
-          class="border border-gray-300 rounded-lg w-full p-2 mb-4"
+            v-model="offerAmount"
+            type="number"
+            min="1"
+            step="0.01"
+            placeholder="Enter amount"
+            class="border border-gray-300 rounded-lg w-full p-2 mb-4"
         />
         <div class="flex justify-between">
           <button
-            class="bg-gray-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:mr-2"
-            @click="closeModal"
+              class="bg-gray-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:mr-2"
+              @click="closeModal"
           >
             Cancel
           </button>
           <button
-            class="bg-blue-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:ml-2"
-            @click="makeOffer"
+              class="bg-blue-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:ml-2"
+              @click="makeOffer"
           >
             <p v-if="loadingOffer">
               <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-6 h-6 animate-spin"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-6 h-6 animate-spin"
               >
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                 ></g>
                 <g id="SVGRepo_iconCarrier">
                   <path
-                    d="M12 1V5"
-                    stroke="#33495d"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
+                      d="M12 1V5"
+                      stroke="#33495d"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
                   ></path>
                   <path
-                    d="M19.4246 18.9246L16.5961 16.0962"
-                    stroke="#1C1C1C"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
+                      d="M19.4246 18.9246L16.5961 16.0962"
+                      stroke="#1C1C1C"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
                   ></path>
                   <path
-                    d="M22.5 11.5L18.5 11.5"
-                    stroke="#1C1C1C"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
+                      d="M22.5 11.5L18.5 11.5"
+                      stroke="#1C1C1C"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
                   ></path>
                   <path
-                    d="M12 18V22"
-                    stroke="#1C1C1C"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
+                      d="M12 18V22"
+                      stroke="#1C1C1C"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
                   ></path>
                   <path
-                    d="M7.40381 6.90381L4.57538 4.07538"
-                    stroke="#1C1C1C"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
+                      d="M7.40381 6.90381L4.57538 4.07538"
+                      stroke="#1C1C1C"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
                   ></path>
                   <path
-                    d="M5.5 11.5L1.5 11.5"
-                    stroke="#1C1C1C"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
+                      d="M5.5 11.5L1.5 11.5"
+                      stroke="#1C1C1C"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
                   ></path>
                   <path
-                    d="M7.40381 16.0962L4.57538 18.9246"
-                    stroke="#1C1C1C"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
+                      d="M7.40381 16.0962L4.57538 18.9246"
+                      stroke="#1C1C1C"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
                   ></path>
                 </g>
               </svg>
@@ -178,13 +178,13 @@
             <p v-else>Make Offer</p>
           </button>
         </div>
- 
+
       </div>
     </div>
     <button
-      v-if="$route.path.includes('product')"
-      class="text-lg font-semibold bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 fixed bottom-20 right-4 md:hidden"
-      @click="$router.go(-1)"
+        v-if="$route.path.includes('product')"
+        class="text-lg font-semibold bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 fixed bottom-20 right-4 md:hidden"
+        @click="$router.go(-1)"
     >
       Go back
     </button>
@@ -229,6 +229,7 @@ export default {
       offerAmount: null,
       sellerFCMToken: null,
       loadingOffer: false,
+      isInWishlist: false,
     };
   },
   mounted() {},
@@ -238,10 +239,6 @@ export default {
       getUser: "auth/getUser",
       getProductById: "getProductById",
     }),
-    // Check if the current route is a product detail page
-    isProductPage() {
-      return this.$route.name === "product-detail"; // Adjust this name according to your route name
-    },
   },
   props: {
     user: {
@@ -275,9 +272,23 @@ export default {
           userId: this.getUser.username,
           ...product,
         });
+        this.isInWishlist = true;
         alert("Product added to wishlist!");
       } catch (error) {
         console.error("Error adding to wishlist:", error);
+      }
+    },
+    async fetchWishlistStatus() {
+      try {
+        const q = query(
+            collection(db, "wishlist"),
+            where("userId", "==", this.getUser.username),
+            where("id", "==", this.productId)
+        );
+        const snapshot = await getDocs(q);
+        this.isInWishlist = !snapshot.empty;
+      } catch (error) {
+        console.error("Error checking wishlist status:", error);
       }
     },
     async fetchSellerToken() {
@@ -300,15 +311,15 @@ export default {
 
       try {
         const offerRef = query(
-          collection(db, "offers"),
-          where("productId", "==", this.productId),
-          where("buyerId", "==", this.getUser.username)
+            collection(db, "offers"),
+            where("productId", "==", this.productId),
+            where("buyerId", "==", this.getUser.username)
         );
         const offerSnap = await getDocs(offerRef);
         if (!offerSnap.empty) {
           this.triggerMessage(
-            "error",
-            "You have already made an offer, please go to the offers page to edit or cancel it."
+              "error",
+              "You have already made an offer, please go to the offers page to edit or cancel it."
           );
           this.closeModal();
           this.loadingOffer = false;
@@ -318,8 +329,8 @@ export default {
       } catch (error) {
         console.error("Error checking if offer exists:", error);
         this.triggerMessage(
-          "error",
-          "Error checking if offer exists. Please try again later."
+            "error",
+            "Error checking if offer exists. Please try again later."
         );
         this.closeModal();
         this.loading = false;
@@ -329,9 +340,9 @@ export default {
 
       const offerDetails = this.offerAmount;
       if (
-        !offerDetails ||
-        isNaN(offerDetails) ||
-        parseFloat(offerDetails) <= 0
+          !offerDetails ||
+          isNaN(offerDetails) ||
+          parseFloat(offerDetails) <= 0
       ) {
         this.triggerMessage("error", "Invalid offer amount. Please try again.");
         return;
@@ -352,7 +363,7 @@ export default {
           createdAt: new Date(),
           status: "Pending",
         };
-  
+
         await addDoc(collection(db, "offers"), offerData);
         this.loading = false;
         this.loadingOffer = false;
@@ -360,15 +371,15 @@ export default {
         this.closeModal();
         this.sellerFCMToken = await getSellerFCMToken(this.product.sellerId);
         await sendPushNotification(
-          this.sellerFCMToken,
-          `You have a new offer for your product!`,
-          `${this.getUser.username} has made an offer for your product "${this.product.name}".`
+            this.sellerFCMToken,
+            `You have a new offer for your product!`,
+            `${this.getUser.username} has made an offer for your product "${this.product.name}".`
         );
       } catch (error) {
         console.error("Error placing offer:", error);
         this.triggerMessage(
-          "error",
-          "Error placing offer. Please try again later."
+            "error",
+            "Error placing offer. Please try again later."
         );
       } finally {
         this.closeModal();
@@ -396,6 +407,7 @@ export default {
           throw new Error("Product not found");
         }
       }
+      await this.fetchWishlistStatus();
     } catch (error) {
       console.error("Error fetching product:", error);
       this.error = error.message;
