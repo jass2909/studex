@@ -21,7 +21,7 @@
       <div
         v-for="product in products"
         :key="product.id"
-        class="border rounded-lg shadow-md p-4 hover:shadow-lg  mt-4 bg-white"
+        class="border rounded-2xl shadow-md p-4 hover:shadow-lg  mt-4 bg-white"
       >
         <router-link
           :to="`/product/${product.id}`"
@@ -44,7 +44,7 @@
           <button class="mt-4">
             <router-link
               :to="`/product/${product.id}`"
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mt-4"
             >
               View Details
             </router-link>
