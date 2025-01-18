@@ -57,7 +57,66 @@
 
           <!-- Submit Button -->
           <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
-            Upload Item
+            <p v-if="loading" class="flex items-center justify-center text-white">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 animate-spin"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    d="M12 1V5"
+                    stroke="#33495d"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M19.4246 18.9246L16.5961 16.0962"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M22.5 11.5L18.5 11.5"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M12 18V22"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M7.40381 6.90381L4.57538 4.07538"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M5.5 11.5L1.5 11.5"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M7.40381 16.0962L4.57538 18.9246"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  ></path>
+                </g>
+              </svg>
+            </p>
+            <p v-else>Upload</p>
           </button>
         </form>
 
@@ -100,6 +159,7 @@ export default {
       defaultImageUrl: "https://placehold.co/400?text=No+Image+Available",
       imageUrl: null,
       itemCondition: "",
+      loading: false,
     };
   },
   computed: {
@@ -143,6 +203,7 @@ export default {
     },
 
     async handleUpload() {
+      this.loading = true;
       try {
 
         if (this.file) {
@@ -202,6 +263,8 @@ export default {
         this.itemPostalCode = "";
         this.itemCategory = "";
         this.itemCondition = "";
+
+        this.loading = false;
         
       } catch (error) {
         console.error("Upload failed:", error.message);
