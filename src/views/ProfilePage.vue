@@ -142,6 +142,12 @@
         >
           Reviews
         </button>
+        <button class="px-4 py-2 rounded-lg transition-colors duration-300" :class="{
+            'bg-blue-500 text-white': activeTab === 'wishlist',
+            'hover:bg-gray-200': activeTab !== 'wishlist',
+          }" @click="activeTab = 'wishlist'">
+          Wishlist
+        </button>
       </div>
     </div>
 
@@ -228,6 +234,11 @@
       <div>
         <!-- Add review content here -->
       </div>
+    </div>
+
+    <!-- Wishlist -->
+    <div v-if="activeTab === 'wishlist'">
+      <WishlistPage :user="user" />
     </div>
 
     <!-- Confirmation Modal -->
@@ -323,6 +334,7 @@ import {
   writeBatch,
   updateDoc
 } from "firebase/firestore";
+import WishlistPage from "@/views/WishlistPage.vue";
 
 
 export default {
@@ -346,6 +358,7 @@ export default {
   
 
   components: {
+    WishlistPage,
     OffersPage,
   },
   computed: {
