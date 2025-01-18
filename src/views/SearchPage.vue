@@ -79,7 +79,7 @@ export default {
 }
 .search-input {
   width: 100%;
-  max-width: 400px;
+  max-width: 200px;
   padding: 8px;
   margin-bottom: 16px;
   border: 1px solid #ccc;
