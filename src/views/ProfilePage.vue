@@ -291,7 +291,8 @@
               class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
               @click="deleteItem"
             >
-              Delete
+              <p v-if="loading">Deleting...</p><p v-else>Delete</p>
+              
             </button>
             <button
               type="button"
@@ -338,6 +339,7 @@ export default {
       offers: [],
       showEditModal: false,
       itemToEdit: null,
+      loading: false,
        
     };
   },
@@ -416,6 +418,7 @@ export default {
   }
 },
     async deleteItem() {
+      this.loading = true;
       try {
         // Get the reference to the document
         const itemDocRef = doc(db, "items", this.itemToDelete.id);
@@ -443,6 +446,7 @@ export default {
         // Close the modal and reset the itemToDelete
         this.showDeleteModal = false;
         this.itemToDelete = null;
+        this.loading = false;
       } catch (error) {
         console.error("Error deleting item:", error);
       }
