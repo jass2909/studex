@@ -5,6 +5,10 @@
         Welcome to Studex, {{ user.username }}
       </h1>
     </div>
+    <div v-else class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" > 
+      <h1>Please log in to view this page</h1>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="this.$router.push('/login')">Log in</button>
+    </div>
     <div class="container mt-14 p-4">
       <div
         v-if="loading"

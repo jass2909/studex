@@ -1,14 +1,15 @@
 <template>
   <div class="container mt-4 p-4">
     <!-- Product Title -->
-    <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">
+    <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
       Product Details
     </h1>
+
     <!-- Message Container -->
     <div
-        v-if="showMessage"
-        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg"
-        :class="{
+      v-if="showMessage"
+      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg"
+      :class="{
         'bg-green-500': messageType === 'success',
         'bg-red-500': messageType === 'error',
       }"
@@ -21,74 +22,77 @@
       <!-- Use a flex container for layout -->
       <div class="flex flex-col md:flex-row items-center md:items-start">
         <!-- Text section (left side) -->
-        <div class="md:w-2/3 text-center md:text-left">
-          <h2 class="text-3xl font-semibold text-gray-900 mb-4">
+        <div class="md:w-2/3 text-center md:text-left mb-6 md:mb-0">
+          <h2 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-4">
             {{ product.name }}
           </h2>
-          <p class="text-lg text-gray-700 mb-4">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Description:</strong> {{ product.description }}
           </p>
-          <p class="text-lg text-gray-700">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Condition:</strong> {{ product.condition }}
           </p>
-          <p class="text-lg text-gray-700">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Category:</strong> {{ product.category }}
           </p>
-          <p class="text-lg text-gray-700">
-            <strong>Location:</strong> {{ product.city }} <br> <strong>Postal Code: </strong>{{ product.postalCode }}
+          <p class="text-base md:text-lg text-gray-700 mb-4">
+            <strong>Location:</strong> {{ product.city }} <br />
+            <strong>Postal Code:</strong> {{ product.postalCode }}
           </p>
-          <p class="text-lg text-gray-700">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Seller:</strong> {{ product.sellerId }}
           </p>
-          <p class="text-lg text-gray-700">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Price:</strong> {{ product.price }} €
           </p>
+
           <!-- Flex container for buttons -->
-          <div class="flex space-x-4 mt-4">
+          <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4">
             <!-- Make an offer button only if user is logged in and not the seller -->
             <button
-                v-if="getUser && getUser.username !== product.sellerId"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                @click="openOfferModal"
+              v-if="getUser && getUser.username !== product.sellerId"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              @click="openOfferModal"
             >
               Make an Offer
             </button>
             <!-- Add to Wishlist button only if product is not in wishlist -->
             <button
-                v-if="getUser && getUser.username !== product.sellerId && !isInWishlist"
-                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
-                @click="addToWishlist(product)"
+              v-if="getUser && getUser.uid !== product.sellerUid && !isInWishlist"
+              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+              @click="addToWishlist(product)"
             >
               Add to Wishlist
               <svg
-                  class="w-5 h-5 ml-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 ml-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                    fill-rule="evenodd"
-                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656l-6.828 6.828a.5.5 0 01-.708 0L3.172 10.828a4 4 0 010-5.656z"
-                    clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656l-6.828 6.828a.5.5 0 01-.708 0L3.172 10.828a4 4 0 010-5.656z"
+                  clip-rule="evenodd"
                 ></path>
               </svg>
             </button>
             <!-- View Seller Profile button -->
             <button
-                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
-                @click="viewSellerProfile(product.sellerUid)"
+              v-if="getUser && getUser.uid !== product.sellerUid"
+              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+              @click="viewSellerProfile(product.sellerUid)"
             >
               View Seller Profile
               <svg
-                  class="w-5 h-5 ml-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 ml-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                    fill-rule="evenodd"
-                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656l-6.828 6.828a.5.5 0 01-.708 0L3.172 10.828a4 4 0 010-5.656z"
-                    clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656l-6.828 6.828a.5.5 0 01-.708 0L3.172 10.828a4 4 0 010-5.656z"
+                  clip-rule="evenodd"
                 ></path>
               </svg>
             </button>
@@ -98,98 +102,99 @@
         <!-- Image section (right side) -->
         <div v-if="product.imageUrl" class="md:w-1/3 mb-4 md:mb-0 md:ml-6">
           <img
-              :src="product.imageUrl"
-              alt="Product Image"
-              class="w-full max-w-xs mx-auto rounded-lg"
+            :src="product.imageUrl"
+            alt="Product Image"
+            class="w-full max-w-xs mx-auto rounded-lg"
           />
         </div>
       </div>
     </div>
+
     <!-- Modal for entering offer amount -->
     <div
-        v-if="showModal"
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50"
+      v-if="showModal"
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50"
     >
       <div
-          class="bg-white p-6 rounded-lg w-full max-w-xs md:max-w-md lg:max-w-lg mx-4"
+        class="bg-white p-6 rounded-lg w-full max-w-xs md:max-w-md lg:max-w-lg mx-4"
       >
         <h2 class="text-2xl mb-4 text-center md:text-left">
           Enter Your Offer Amount
         </h2>
         <input
-            v-model="offerAmount"
-            type="number"
-            min="1"
-            step="0.01"
-            placeholder="Enter amount"
-            class="border border-gray-300 rounded-lg w-full p-2 mb-4"
+          v-model="offerAmount"
+          type="number"
+          min="1"
+          step="0.01"
+          placeholder="Enter amount"
+          class="border border-gray-300 rounded-lg w-full p-2 mb-4"
         />
         <div class="flex justify-between">
           <button
-              class="bg-gray-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:mr-2"
-              @click="closeModal"
+            class="bg-gray-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:mr-2"
+            @click="closeModal"
           >
             Cancel
           </button>
           <button
-              class="bg-blue-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:ml-2"
-              @click="makeOffer"
+            class="bg-blue-500 text-white py-2 px-4 rounded-lg w-full md:w-auto md:ml-2"
+            @click="makeOffer"
           >
             <p v-if="loadingOffer">
               <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-6 h-6 animate-spin"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 animate-spin"
               >
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 ></g>
                 <g id="SVGRepo_iconCarrier">
                   <path
-                      d="M12 1V5"
-                      stroke="#33495d"
-                      stroke-width="1.7"
-                      stroke-linecap="round"
+                    d="M12 1V5"
+                    stroke="#33495d"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
                   ></path>
                   <path
-                      d="M19.4246 18.9246L16.5961 16.0962"
-                      stroke="#1C1C1C"
-                      stroke-width="1.7"
-                      stroke-linecap="round"
+                    d="M19.4246 18.9246L16.5961 16.0962"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
                   ></path>
                   <path
-                      d="M22.5 11.5L18.5 11.5"
-                      stroke="#1C1C1C"
-                      stroke-width="1.7"
-                      stroke-linecap="round"
+                    d="M22.5 11.5L18.5 11.5"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
                   ></path>
                   <path
-                      d="M12 18V22"
-                      stroke="#1C1C1C"
-                      stroke-width="1.7"
-                      stroke-linecap="round"
+                    d="M12 18V22"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
                   ></path>
                   <path
-                      d="M7.40381 6.90381L4.57538 4.07538"
-                      stroke="#1C1C1C"
-                      stroke-width="1.7"
-                      stroke-linecap="round"
+                    d="M7.40381 6.90381L4.57538 4.07538"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
                   ></path>
                   <path
-                      d="M5.5 11.5L1.5 11.5"
-                      stroke="#1C1C1C"
-                      stroke-width="1.7"
-                      stroke-linecap="round"
+                    d="M5.5 11.5L1.5 11.5"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
                   ></path>
                   <path
-                      d="M7.40381 16.0962L4.57538 18.9246"
-                      stroke="#1C1C1C"
-                      stroke-width="1.7"
-                      stroke-linecap="round"
+                    d="M7.40381 16.0962L4.57538 18.9246"
+                    stroke="#1C1C1C"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
                   ></path>
                 </g>
               </svg>
@@ -197,16 +202,9 @@
             <p v-else>Make Offer</p>
           </button>
         </div>
-
       </div>
     </div>
-    <button
-        v-if="$route.path.includes('product')"
-        class="text-lg font-semibold bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 fixed bottom-20 right-4 md:hidden"
-        @click="$router.go(-1)"
-    >
-      Go back
-    </button>
+
 
     <!-- Display loading or error messages if necessary -->
     <p v-else-if="loading" class="text-center text-xl text-gray-500">
@@ -216,7 +214,6 @@
       Error: {{ error }}
     </p>
   </div>
-
 </template>
 
 <script>

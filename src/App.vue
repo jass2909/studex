@@ -74,44 +74,14 @@
   </nav>
    <!-- Dropdown Menu -->
    <div v-show="menuOpen" class="bg-gray-900 text-white p-4 fixed bottom-16 left-0 right-0 z-20 shadow-lg">
-      <router-link    to="/" class="block py-2 text-gray-300 hover:text-white">
-        <div class="flex items-center space-x-2" @click="menuOpen = false">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-          <span>Home</span>
-        </div>
-      </router-link>
-
-      <router-link to="/search" class="block py-2 text-gray-300 hover:text-white">
-        <div class="flex items-center space-x-2" @click="menuOpen = false">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-            <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-          <span>Search</span>
-        </div>
-      </router-link>
-
-      <router-link v-if="isAuthenticated" to="/sell" class="block py-2 text-gray-300 hover:text-white">
-        <div class="flex items-center space-x-2" @click="menuOpen = false">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-          <span>Sell</span>
-        </div>
-      </router-link>
-
-      <router-link v-if="isAuthenticated" to="/login"
-        class="block py-2 text-gray-300 hover:text-white">
-        <div class="flex items-center space-x-2" @click="menuOpen = false">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          <span>Profile</span>
-        </div>
-      </router-link>
+     
+    <!-- Logout Button -->
+    <button v-if="isAuthenticated" @click="logout"
+        class="text-gray-300 hover:text-white bg-transparent border-2 border-white px-4 py-2 rounded-lg">
+        Logout
+      </button>
+      <button v-else 
+        class="text-gray-300 hover:text-white bg-transparent border-2 border-white px-4 py-2 rounded-lg" @click="$router.push('/login')">Login</button>
     </div>
 
   <div class="container mx-auto p-4 flex justify-center  md:mt-20 ">

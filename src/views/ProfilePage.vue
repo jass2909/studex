@@ -91,6 +91,9 @@
           <h2 class="text-3xl font-semibold text-gray-900 mb-2">
             {{ user?.username || "Loading..." }}
           </h2>
+          <p class="text-lg text-gray-700"> 
+            <strong>Name:</strong> {{ user?.name || "Loading..." }}
+          </p>
           <p class="text-lg text-gray-700">
             <strong>City:</strong> {{ user?.city || "Loading..." }}
           </p>
@@ -100,12 +103,82 @@
         </div>
         <div>
           <button
+            @click="showUserEditModal = true"
             class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300"
             :disabled="!user"
           >
             Edit Profile
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div
+      v-if="showUserEditModal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center z-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-4 w-1/2">
+        <h2 class="font-semibold text-gray-800 mb-4">Edit Profile</h2>
+        <form @submit.prevent="updateProfile">
+          <div class="mb-4">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="name"
+            >
+              Name:
+            </label>
+            <input
+              v-model="userToEdit.name"
+              id="name"
+              type="text"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="city"
+            >
+              City:
+            </label>
+            <input
+              v-model="userToEdit.city"
+              id="city"
+              type="text"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+          <div class="mb-4">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="bio"
+            >
+              Bio:
+            </label>
+            <textarea
+              v-model="userToEdit.bio"
+              id="bio"
+              rows="3"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            ></textarea>
+          </div>
+          <div class="flex justify-end space-x-4">
+            <button
+              type="submit"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Save Changes
+            </button>
+            <button
+              @click="showUserEditModal = false"
+              class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -122,7 +195,7 @@
         >
           Items
         </button>
-        <button 
+        <button
           class="px-4 py-2 rounded-lg transition-colors duration-300"
           :class="{
             'bg-blue-500 text-white': activeTab === 'offers',
@@ -142,10 +215,14 @@
         >
           Reviews
         </button>
-        <button class="px-4 py-2 rounded-lg transition-colors duration-300" :class="{
+        <button
+          class="px-4 py-2 rounded-lg transition-colors duration-300"
+          :class="{
             'bg-blue-500 text-white': activeTab === 'wishlist',
             'hover:bg-gray-200': activeTab !== 'wishlist',
-          }" @click="activeTab = 'wishlist'">
+          }"
+          @click="activeTab = 'wishlist'"
+        >
           Wishlist
         </button>
       </div>
@@ -302,8 +379,8 @@
               class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
               @click="deleteItem"
             >
-              <p v-if="loading">Deleting...</p><p v-else>Delete</p>
-              
+              <p v-if="loading">Deleting...</p>
+              <p v-else>Delete</p>
             </button>
             <button
               type="button"
@@ -332,15 +409,12 @@ import {
   query,
   deleteDoc,
   writeBatch,
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
 import WishlistPage from "@/views/WishlistPage.vue";
 import Swal from "sweetalert2";
 
-
 export default {
- 
- 
   data() {
     return {
       user: null,
@@ -353,10 +427,13 @@ export default {
       showEditModal: false,
       itemToEdit: null,
       loading: false,
-       
+      showUserEditModal: false, // To control modal visibility
+      userToEdit: { ...this.user },
+      NewName: null,
+      NewCity: null,
+      NewBio: null,
     };
   },
-  
 
   components: {
     WishlistPage,
@@ -408,29 +485,48 @@ export default {
       }
     },
     async editProduct(itemToEdit) {
-      
+      try {
+        await updateDoc(doc(db, "items", itemToEdit.id), {
+          name: itemToEdit.name,
+          price: itemToEdit.price,
+          city: itemToEdit.city,
+          postalCode: itemToEdit.postalCode,
+          imageUrl: itemToEdit.imageUrl,
+        });
 
-  try {
-    await updateDoc(doc(db, "items", itemToEdit.id), {
-      name: itemToEdit.name,
-      price: itemToEdit.price,
-      city: itemToEdit.city,
-      postalCode: itemToEdit.postalCode,
-      imageUrl: itemToEdit.imageUrl,
-    });
+        this.showEditModal = false;
+        this.fetchProducts(); // Assuming you have a method to fetch products
 
-    this.showEditModal = false;
-    this.fetchProducts(); // Assuming you have a method to fetch products
+        // Reset the itemToEdit
+        this.itemToEdit = null;
 
-    // Reset the itemToEdit
-    this.itemToEdit = null;
+        alert("Product updated successfully!");
+      } catch (error) {
+        alert("Error updating product. Please try again later.");
+        console.error(error);
+      }
+    },
 
-    alert("Product updated successfully!");
-  } catch (error) {
-    alert("Error updating product. Please try again later.");
-    console.error(error);
-  }
-},
+    // Handle profile update
+    async updateProfile() {
+      try {
+        // Update user data in Firestore
+        await updateDoc(doc(db, "users", this.$route.params.uid), {
+          name: this.userToEdit.name,
+          city: this.userToEdit.city,
+          bio: this.userToEdit.bio,
+        });
+
+        // Close the modal and update the user object
+        this.showUserEditModal = false;
+        this.user = this.fetchUser(this.$route.params.uid); // Update the displayed user data
+
+        alert("Profile updated successfully!");
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        alert("Error updating profile. Please try again.");
+      }
+    },
     async deleteItem() {
       this.loading = true;
       try {
@@ -463,9 +559,9 @@ export default {
         this.loading = false;
         // Show a success message
         await Swal.fire({
-          icon: 'success',
-          title: 'Item deleted!',
-          text: 'Your item has been deleted successfully.',
+          icon: "success",
+          title: "Item deleted!",
+          text: "Your item has been deleted successfully.",
           timer: 3000,
           showConfirmButton: false,
         });
@@ -473,9 +569,9 @@ export default {
         console.error("Error deleting item:", error);
         // Show an error message
         await Swal.fire({
-          icon: 'error',
-          title: 'Error deleting item',
-          text: 'An error occurred while deleting the item. Please try again later.',
+          icon: "error",
+          title: "Error deleting item",
+          text: "An error occurred while deleting the item. Please try again later.",
           timer: 3000,
           showConfirmButton: false,
         });
