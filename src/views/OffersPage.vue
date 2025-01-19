@@ -313,6 +313,7 @@ import { sendPushNotification } from "../notify";
 import { getSellerFCMToken } from "../utils/firebaseUtils";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
@@ -412,9 +413,22 @@ export default {
         const offerRef = doc(db, "offers", offerId);
         await updateDoc(offerRef, { status: status });
         this.fetchOffers();
+        await Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Offer declined successfully",
+          showConfirmButton: true,
+          timer: 2000,
+        });
       } catch (error) {
         console.error("Error declining offer:", error);
-        alert("Error declining offer. Please try again later.");
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error declining offer. Please try again later.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     },
     async cancelOffer(offerId, sellerId) {
@@ -423,14 +437,27 @@ export default {
         await deleteDoc(offerRef);
         this.sellerFCMToken = await getSellerFCMToken(sellerId);
         sendPushNotification(
-          this.sellerFCMToken,
-          "Offer Cancelled",
-          "The Buyer has cancelled the offer"
+            this.sellerFCMToken,
+            "Offer Cancelled",
+            "The Buyer has cancelled the offer"
         );
+        await Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Offer cancelled successfully",
+          showConfirmButton: true,
+          timer: 2000,
+        });
         this.fetchOffers();
       } catch (error) {
         console.error("Error cancelling offer:", error);
-        alert("Error cancelling offer. Please try again later.");
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error cancelling offer. Please try again later.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     },
     async editOffer(offerId) {
@@ -449,11 +476,23 @@ export default {
           status: "Pending",
           offerAmount: parseFloat(newOfferAmount),
         });
-        alert("Offer edited successfully.");
+        await Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Offer updated successfully",
+          showConfirmButton: true,
+          timer: 2000,
+        });
         this.fetchOffers();
       } catch (error) {
         console.error("Error editing offer:", error);
-        alert("Error editing offer. Please try again later.");
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error updating offer. Please try again later.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     },
     

@@ -88,6 +88,7 @@ export default {
     };
   },
   computed: {
+    allProducts: undefined,
     ...mapGetters(["allProducts"]),
     ...mapGetters({
       getUser: "auth/getUser",

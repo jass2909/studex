@@ -26,6 +26,7 @@
 <script>
 import { db } from "@/firebase";
 import { collection, getDocs, query, where, writeBatch } from "firebase/firestore";
+import Swal from "sweetalert2";
 
 export default {
   props: {
@@ -65,8 +66,21 @@ export default {
         });
         await batch.commit();
         await this.fetchWishlist();
+        await Swal.fire({
+          icon: 'success',
+          title: 'Removed from Wishlist',
+          text: 'Removing the product from your wishlist was successful',
+          timer: 3000,
+          showConfirmButton: true,
+        });
+        window.location.reload(); // Refresh the page to reflect the changes
       } catch (error) {
         console.error("Error removing from wishlist:", error);
+        await Swal.fire({
+          icon: 'error',
+          title: 'Remove from Wishlist Failed',
+          text: error.message,
+        });
       }
     },
   },
