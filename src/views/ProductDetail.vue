@@ -419,7 +419,7 @@ export default {
       try {
         await this.$router.push({
           name: "SellerProfile",
-          params: { id: sellerUid },
+          params: { uid: sellerUid },
         });
       } catch (error) {
         console.error("Error navigating to seller profile:", error);

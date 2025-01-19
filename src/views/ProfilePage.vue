@@ -122,7 +122,7 @@
         >
           Items
         </button>
-        <button v-if="user.uid === $route.params.uid"
+        <button 
           class="px-4 py-2 rounded-lg transition-colors duration-300"
           :class="{
             'bg-blue-500 text-white': activeTab === 'offers',
