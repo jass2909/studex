@@ -73,6 +73,25 @@
                 ></path>
               </svg>
             </button>
+            <!-- View Seller Profile button -->
+            <button
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+                @click="viewSellerProfile(product.sellerUid)"
+            >
+              View Seller Profile
+              <svg
+                  class="w-5 h-5 ml-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                    fill-rule="evenodd"
+                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656l-6.828 6.828a.5.5 0 01-.708 0L3.172 10.828a4 4 0 010-5.656z"
+                    clip-rule="evenodd"
+                ></path>
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -396,6 +415,16 @@ export default {
         this.closeModal();
       }
     },
+    async viewSellerProfile(sellerUid) {
+      try {
+        await this.$router.push({
+          name: "SellerProfile",
+          params: { id: sellerUid },
+        });
+      } catch (error) {
+        console.error("Error navigating to seller profile:", error);
+      }
+    }
   },
   async created() {
     try {

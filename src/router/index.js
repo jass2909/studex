@@ -5,6 +5,7 @@ import ProductDetail from "@/views/ProductDetail.vue";
 
 import HomePage from "@/views/HomePage.vue";
 import LoginPage from "@/views/LoginPage.vue"; // Example of another page, adjust as needed
+import { name } from "dayjs/locale/en";
 
 
 
@@ -43,6 +44,12 @@ const routes = [
     path: "/profile/:uid",
     name: "profile",
     component: () => import("@/views/ProfilePage.vue"),
+  },
+  {
+    path: "/seller/:uid",
+    name: "SellerProfile",
+    component: () => import("@/views/SellerProfile.vue"),
+
   },
   {
     path: "/offers",
