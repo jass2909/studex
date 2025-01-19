@@ -230,7 +230,8 @@ export default {
           imageUrl: this.imageUrl,
           sellerId: this.user.username,
           createdAt: new Date(),
-          condition: this.itemCondition
+          condition: this.itemCondition,
+          sellerUid: this.user.uid
         });
 
         // Create the new product object
