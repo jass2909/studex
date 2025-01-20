@@ -291,7 +291,7 @@
                 View in Maps
               </button>
               <button
-                @click="markAsSold(offer.id)"
+                @click="markAsSold(offer.id, offer.buyerId)"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded mt-4"
               >
                 Mark as Sold
