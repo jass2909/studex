@@ -145,16 +145,13 @@
                     >
                       Select a Meetup Place
                     </h3>
-                    <!-- Other template code -->
                     <div v-if="showDistrictModal">
                       <label for="districtPlace">Select your District </label>
-                      <select v-model="selectedDistrict" id="districtPlace">
+                      <select v-model="selectedDistrict" id="districtPlace" class="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option v-for="place in districtPlaces" :key="place" :value="place">
                           {{ place.name }}
                         </option>
                       </select>
-                      <br>
-                      <button @click="confirmDistrict">Confirm</button>
                     </div>
                     <div class="mt-2">
                       <select
@@ -162,7 +159,7 @@
                         class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option
-                          v-for="place in meetupPlaces"
+                          v-for="place in meetupPlacesFinal"
                           :key="place.id"
                           :value="place"
                         >
@@ -196,10 +193,10 @@
                 >
                   Propose Meetup
                 </button>
-                <button
+                <button v-if="showDistrictModal"
                     type="button"
                     class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    @click=""
+                    @click="confirmDistrict"
                 >
                   Sort Meetup Places
                 </button>
@@ -345,6 +342,7 @@ export default {
       selectedMeetupPlace: null,
       selectedMeetupDateTime: null,
       meetupPlaces: meetupPlaces,
+      meetupPlacesFinal: [],
       districtPlaces: districtPlaces,
       selectedDistrict: null,
       showDistrictModal: true,
@@ -372,8 +370,8 @@ export default {
     },
     getSortedMeetupPlaces() {
       // Logic to sort the meetup places based on the selected district
-      const optimalPlaces = getOptimalMeetupPlace(this.selectedDistrict.name);
-      this.meetupPlaces = optimalPlaces;
+      console.log("Offers", this.incomingOffers);
+      this.meetupPlacesFinal = getOptimalMeetupPlace(this.selectedDistrict.name);
 
     },
     formatMeetupDateTime(dateTimeString) {
