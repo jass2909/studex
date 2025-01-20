@@ -25,6 +25,7 @@
           >
             <strong>Status:</strong> {{ offer.status || "Pending" }}
           </p>
+          <p v-if="offer.status === 'Sold'">Sold to: {{ offer.soldTo }}</p>
 
           <button
             v-if="offer.status === 'Pending'"
@@ -73,7 +74,7 @@
                 @click="leaveReview(offer.id)"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded mt-4"
               >
-                Leave Review for {{ offer.sellerId }}
+                Mark Completed
               </button>
             </div>
           </div>
@@ -94,7 +95,7 @@
               accept</strong
             >
           </p>
-          <button
+          <button v-if="!offer.status === 'Sold'"
             class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mx-2"
             @click="cancelOffer(offer.id, offer.sellerId)"
           >

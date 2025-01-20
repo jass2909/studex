@@ -86,7 +86,7 @@
       <!-- Reviews -->
       <div v-if="activeTab === 'reviews'">
         <div class="text-4xl font-bold text-center text-gray-800 mb-6">
-          <h1>My Reviews</h1>
+          <h1>Reviews</h1>
         </div>
   
         <div>

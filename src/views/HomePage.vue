@@ -33,10 +33,10 @@
                 <img
                   :src="product.imageUrl"
                   alt="Product Image"
-                  class="w-full h-64 object-contain rounded-md"
+                  class="w-full h-64 object-contain rounded-lg"
                 />
               </div>
-              <div class="flex flex-col ">
+              <div class="flex flex-col">
                 <span class="font-semibold text-gray-800">{{ product.name }}</span>
                 <span class="text-gray-600"><strong>Price: </strong>€{{ product.price }}</span>
                 <span class="text-gray-600">Condition: {{ product?.condition || "N/A" }}</span>
