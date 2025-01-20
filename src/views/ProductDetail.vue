@@ -390,6 +390,7 @@ export default {
           buyerId: userId,
           createdAt: new Date(),
           status: "Pending",
+          SoldTo: "",
         };
 
         await addDoc(collection(db, "offers"), offerData);
