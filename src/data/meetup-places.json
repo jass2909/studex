@@ -1,22 +1,186 @@
 [
     {
-      "id": 1,
-      "name": "Central Park",
-      "address": "Central Park, New York, NY 10024, USA"
+        "id": 1,
+        "name": "Stephansplatz",
+        "coordinates": {
+            "lat": 48.2082,
+            "lng": 16.3738
+        }
     },
     {
-      "id": 2,
-      "name": "Golden Gate Bridge",
-      "address": "Golden Gate Bridge, San Francisco, CA 94129, USA"
+        "id": 2,
+        "name": "Karmelitermarkt",
+        "coordinates": {
+            "lat": 48.2155,
+            "lng": 16.381
+        }
     },
     {
-      "id": 3,
-      "name": "Eiffel Tower",
-      "address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France"
+        "id": 3,
+        "name": "Rochusmarkt",
+        "coordinates": {
+            "lat": 48.2045,
+            "lng": 16.389
+        }
     },
     {
-      "id": 4,
-      "name": "Taj Mahal",
-      "address": "Dharmapuri, Forest Colony, Tajganj, Agra, Uttar Pradesh 282001, India"
+        "id": 4,
+        "name": "Karlsplatz",
+        "coordinates": {
+            "lat": 48.2005,
+            "lng": 16.3645
+        }
+    },
+    {
+        "id": 5,
+        "name": "Margaretenplatz",
+        "coordinates": {
+            "lat": 48.1925,
+            "lng": 16.356
+        }
+    },
+    {
+        "id": 6,
+        "name": "Naschmarkt",
+        "coordinates": {
+            "lat": 48.1986,
+            "lng": 16.3612
+        }
+    },
+    {
+        "id": 7,
+        "name": "Spittelberg",
+        "coordinates": {
+            "lat": 48.203,
+            "lng": 16.355
+        }
+    },
+    {
+        "id": 8,
+        "name": "Sobieskiplatz",
+        "coordinates": {
+            "lat": 48.214,
+            "lng": 16.348
+        }
+    },
+    {
+        "id": 9,
+        "name": "Servitenplatz",
+        "coordinates": {
+            "lat": 48.22,
+            "lng": 16.36
+        }
+    },
+    {
+        "id": 10,
+        "name": "Reumannplatz",
+        "coordinates": {
+            "lat": 48.1845,
+            "lng": 16.377
+        }
+    },
+    {
+        "id": 11,
+        "name": "Enkplatz",
+        "coordinates": {
+            "lat": 48.171,
+            "lng": 16.413
+        }
+    },
+    {
+        "id": 12,
+        "name": "Meidlinger Markt",
+        "coordinates": {
+            "lat": 48.1855,
+            "lng": 16.335
+        }
+    },
+    {
+        "id": 13,
+        "name": "Hietzinger Platz",
+        "coordinates": {
+            "lat": 48.186,
+            "lng": 16.308
+        }
+    },
+    {
+        "id": 14,
+        "name": "Reinlpark",
+        "coordinates": {
+            "lat": 48.198,
+            "lng": 16.312
+        }
+    },
+    {
+        "id": 15,
+        "name": "Schwendermarkt",
+        "coordinates": {
+            "lat": 48.192,
+            "lng": 16.3355
+        }
+    },
+    {
+        "id": 16,
+        "name": "Brunnenmarkt",
+        "coordinates": {
+            "lat": 48.215,
+            "lng": 16.34
+        }
+    },
+    {
+        "id": 17,
+        "name": "Elterleinplatz",
+        "coordinates": {
+            "lat": 48.223,
+            "lng": 16.336
+        }
+    },
+    {
+        "id": 18,
+        "name": "Kutschkermarkt",
+        "coordinates": {
+            "lat": 48.226,
+            "lng": 16.345
+        }
+    },
+    {
+        "id": 19,
+        "name": "Sonnbergplatz",
+        "coordinates": {
+            "lat": 48.241,
+            "lng": 16.343
+        }
+    },
+    {
+        "id": 20,
+        "name": "Wallensteinplatz",
+        "coordinates": {
+            "lat": 48.233,
+            "lng": 16.37
+        }
+    },
+    {
+        "id": 21,
+        "name": "Floridsdorfer Markt",
+        "coordinates": {
+            "lat": 48.257,
+            "lng": 16.391
+        }
+    },
+    {
+        "id": 22,
+        "name": "Kagraner Platz",
+        "coordinates": {
+            "lat": 48.2415,
+            "lng": 16.4135
+        }
+    },
+    {
+        "id": 23,
+        "name": "Liesinger Platz",
+        "coordinates": {
+            "lat": 48.152,
+            "lng": 16.293
+        }
     }
-  ]
+]

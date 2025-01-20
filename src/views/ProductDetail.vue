@@ -1,9 +1,10 @@
 <template>
   <div class="container mt-4 p-4">
     <!-- Product Title -->
-    <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">
+    <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
       Product Details
     </h1>
+
     <!-- Message Container -->
     <div
       v-if="showMessage"
@@ -21,36 +22,81 @@
       <!-- Use a flex container for layout -->
       <div class="flex flex-col md:flex-row items-center md:items-start">
         <!-- Text section (left side) -->
-        <div class="md:w-2/3 text-center md:text-left">
-          <h2 class="text-3xl font-semibold text-gray-900 mb-4">
+        <div class="md:w-2/3 text-center md:text-left mb-6 md:mb-0">
+          <h2 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-4">
             {{ product.name }}
           </h2>
-          <p class="text-lg text-gray-700 mb-4">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Description:</strong> {{ product.description }}
           </p>
-          <p class="text-lg text-gray-700">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Condition:</strong> {{ product.condition }}
           </p>
-          <p class="text-lg text-gray-700">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Category:</strong> {{ product.category }}
           </p>
-          <p class="text-lg text-gray-700">
-            <strong>Location:</strong> {{ product.city }} <br> <strong>Postal Code: </strong>{{ product.postalCode }}
+          <p class="text-base md:text-lg text-gray-700 mb-4">
+            <strong>Location:</strong> {{ product.city }} <br />
+            <strong>Postal Code:</strong> {{ product.postalCode }}
           </p>
-          <p class="text-lg text-gray-700">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Seller:</strong> {{ product.sellerId }}
           </p>
-          <p class="text-lg text-gray-700">
+          <p class="text-base md:text-lg text-gray-700 mb-4">
             <strong>Price:</strong> {{ product.price }} €
           </p>
-          <!-- Make an offer button only if user is logged in and not the seller -->
-          <button
-            v-if="getUser && getUser.username !== product.sellerId"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-            @click="openOfferModal"
-          >
-            Make an Offer
-          </button>
+
+          <!-- Flex container for buttons -->
+          <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4">
+            <!-- Make an offer button only if user is logged in and not the seller -->
+            <button
+              v-if="getUser && getUser.username !== product.sellerId"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              @click="openOfferModal"
+            >
+              Make an Offer
+            </button>
+            <!-- Add to Wishlist button only if product is not in wishlist -->
+            <button
+              v-if="getUser && getUser.uid !== product.sellerUid && !isInWishlist"
+              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+              @click="addToWishlist(product)"
+            >
+              Add to Wishlist
+              <svg
+                class="w-5 h-5 ml-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656l-6.828 6.828a.5.5 0 01-.708 0L3.172 10.828a4 4 0 010-5.656z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </button>
+            <!-- View Seller Profile button -->
+            <button
+              v-if="getUser && getUser.uid !== product.sellerUid"
+              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+              @click="viewSellerProfile(product.sellerUid)"
+            >
+              View Seller Profile
+              <svg
+                class="w-5 h-5 ml-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656l-6.828 6.828a.5.5 0 01-.708 0L3.172 10.828a4 4 0 010-5.656z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- Image section (right side) -->
@@ -63,6 +109,7 @@
         </div>
       </div>
     </div>
+
     <!-- Modal for entering offer amount -->
     <div
       v-if="showModal"
@@ -155,16 +202,9 @@
             <p v-else>Make Offer</p>
           </button>
         </div>
- 
       </div>
     </div>
-    <button
-      v-if="$route.path.includes('product')"
-      class="text-lg font-semibold bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 fixed bottom-20 right-4 md:hidden"
-      @click="$router.go(-1)"
-    >
-      Go back
-    </button>
+
 
     <!-- Display loading or error messages if necessary -->
     <p v-else-if="loading" class="text-center text-xl text-gray-500">
@@ -190,6 +230,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getSellerFCMToken } from "@/utils/firebaseUtils";
+import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -205,6 +246,7 @@ export default {
       offerAmount: null,
       sellerFCMToken: null,
       loadingOffer: false,
+      isInWishlist: false,
     };
   },
   mounted() {},
@@ -214,9 +256,11 @@ export default {
       getUser: "auth/getUser",
       getProductById: "getProductById",
     }),
-    // Check if the current route is a product detail page
-    isProductPage() {
-      return this.$route.name === "product-detail"; // Adjust this name according to your route name
+  },
+  props: {
+    user: {
+      type: Object,
+      required: true,
     },
   },
   methods: {
@@ -238,6 +282,43 @@ export default {
         this.showMessage = false;
       }, 3000);
     },
+    async addToWishlist(product) {
+      try {
+        const wishlistRef = collection(db, "wishlist");
+        await addDoc(wishlistRef, {
+          userId: this.getUser.username,
+          ...product,
+        });
+        this.isInWishlist = true;
+        await Swal.fire({
+          icon: "Success",
+          title: "Added to Wishlist!",
+          text: "The product has been added to your wishlist.",
+          showConfirmButton: true,
+          timer: 1500,
+        });
+      } catch (error) {
+        console.error("Error adding to wishlist:", error);
+        await Swal.fire({
+          icon: "Error",
+          title: "Error while adding to Wishlist",
+          text: error.message,
+        });
+      }
+    },
+    async fetchWishlistStatus() {
+      try {
+        const q = query(
+            collection(db, "wishlist"),
+            where("userId", "==", this.getUser.username),
+            where("id", "==", this.productId)
+        );
+        const snapshot = await getDocs(q);
+        this.isInWishlist = !snapshot.empty;
+      } catch (error) {
+        console.error("Error checking wishlist status:", error);
+      }
+    },
     async fetchSellerToken() {
       const sellerId = this.product.sellerId; // Replace with your actual sellerId
       this.sellerFCMToken = await getSellerFCMToken(sellerId);
@@ -258,15 +339,15 @@ export default {
 
       try {
         const offerRef = query(
-          collection(db, "offers"),
-          where("productId", "==", this.productId),
-          where("buyerId", "==", this.getUser.username)
+            collection(db, "offers"),
+            where("productId", "==", this.productId),
+            where("buyerId", "==", this.getUser.username)
         );
         const offerSnap = await getDocs(offerRef);
         if (!offerSnap.empty) {
           this.triggerMessage(
-            "error",
-            "You have already made an offer, please go to the offers page to edit or cancel it."
+              "error",
+              "You have already made an offer, please go to the offers page to edit or cancel it."
           );
           this.closeModal();
           this.loadingOffer = false;
@@ -276,8 +357,8 @@ export default {
       } catch (error) {
         console.error("Error checking if offer exists:", error);
         this.triggerMessage(
-          "error",
-          "Error checking if offer exists. Please try again later."
+            "error",
+            "Error checking if offer exists. Please try again later."
         );
         this.closeModal();
         this.loading = false;
@@ -287,9 +368,9 @@ export default {
 
       const offerDetails = this.offerAmount;
       if (
-        !offerDetails ||
-        isNaN(offerDetails) ||
-        parseFloat(offerDetails) <= 0
+          !offerDetails ||
+          isNaN(offerDetails) ||
+          parseFloat(offerDetails) <= 0
       ) {
         this.triggerMessage("error", "Invalid offer amount. Please try again.");
         return;
@@ -309,8 +390,9 @@ export default {
           buyerId: userId,
           createdAt: new Date(),
           status: "Pending",
+          SoldTo: "",
         };
-  
+
         await addDoc(collection(db, "offers"), offerData);
         this.loading = false;
         this.loadingOffer = false;
@@ -318,20 +400,31 @@ export default {
         this.closeModal();
         this.sellerFCMToken = await getSellerFCMToken(this.product.sellerId);
         await sendPushNotification(
-          this.sellerFCMToken,
-          `You have a new offer for your product!`,
-          `${this.getUser.username} has made an offer for your product "${this.product.name}".`
+            this.sellerFCMToken,
+            `You have a new offer for your product!`,
+            `${this.getUser.username} has made an offer for your product "${this.product.name}".`,
+            this.product.imageUrl
         );
       } catch (error) {
         console.error("Error placing offer:", error);
         this.triggerMessage(
-          "error",
-          "Error placing offer. Please try again later."
+            "error",
+            "Error placing offer. Please try again later."
         );
       } finally {
         this.closeModal();
       }
     },
+    async viewSellerProfile(sellerUid) {
+      try {
+        await this.$router.push({
+          name: "SellerProfile",
+          params: { uid: sellerUid },
+        });
+      } catch (error) {
+        console.error("Error navigating to seller profile:", error);
+      }
+    }
   },
   async created() {
     try {
@@ -354,6 +447,7 @@ export default {
           throw new Error("Product not found");
         }
       }
+      await this.fetchWishlistStatus();
     } catch (error) {
       console.error("Error fetching product:", error);
       this.error = error.message;

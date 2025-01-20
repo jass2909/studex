@@ -57,6 +57,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -76,10 +77,26 @@ export default {
         password: this.password,
         username: this.username,
       });
-      this.$router.push("/");
+      await Swal .fire({
+        title: "Success!",
+        text: "Registration successful",
+        icon: "success",
+        confirmButtonText: "OK",
+        timer: 2000,
+      });
+      setTimeout(() => {
+        this.$router.push("/");
+      }, 1000);
     } catch (error) {
       this.error = error.message; // Display error in the component
       console.error("Registration failed:", error);
+      await Swal.fire({
+        title: "Error!",
+        text: error.message,
+        icon: "error",
+        confirmButtonText: "OK",
+        timer: 2500,
+      });
     }
   },
   },
