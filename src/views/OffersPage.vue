@@ -229,7 +229,7 @@
                 <button
                   type="button"
                   class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  @click="showMeetupPlaceModal = false, districtSelected = false"
+                  @click="showMeetupPlaceModal = false, districtSelected = false, showDistrictModal = true"
                 >
                   Cancel
                 </button>
@@ -330,7 +330,7 @@
             </button>
             <button
               v-if="offer.status === 'Meetup Proposed'"
-              @click="acceptProposal(offer.id, 'Proposal Accepted by Seller')"
+              @click="acceptProposal(offer.id, 'Proposal Accepted by Seller', offer.buyerId)"
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mx-4"
             >
               Accept Porposal
@@ -646,17 +646,19 @@ export default {
         console.log("Offer with meetup place updated successfully.");
         this.showMeetupPlaceModal = false;
         this.districtSelected = false;
+        this.showDistrictModal = false;
         this.fetchOffers();
       } catch (error) {
         console.error("Error updating offer with meetup place:", error);
         alert("Error updating offer. Please try again later.");
       }
     },
-    async acceptProposal(offerId, status) {
+    async acceptProposal(offerId, status, buyerId) {
       try {
         const offerRef = doc(db, "offers", offerId);
         await updateDoc(offerRef, { status: status });
-        this.sellerFCMToken = await getSellerFCMToken(sellerId);
+        this.sellerFCMToken = await getSellerFCMToken(buyerId);
+        console.log(this.sellerFCMToken);
         sendPushNotification(
           this.sellerFCMToken,
           "Proposal Accepted",
