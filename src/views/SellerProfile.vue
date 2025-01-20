@@ -22,27 +22,9 @@
       <!-- Tabs -->
       <div class="flex justify-center mb-6 mx-4 text-2xl">
         <div class="bg-white rounded-lg shadow-lg p-2">
-          <button
-            class="px-4 py-2 rounded-lg transition-colors duration-300"
-            :class="{
-              'bg-blue-500 text-white': activeTab === 'items',
-              'hover:bg-gray-200': activeTab !== 'items',
-            }"
-            @click="activeTab = 'items'"
-          >
-            Items
-          </button>
+         <h1>Items</h1>
           
-          <button
-            class="px-4 py-2 rounded-lg transition-colors duration-300"
-            :class="{
-              'bg-blue-500 text-white': activeTab === 'reviews',
-              'hover:bg-gray-200': activeTab !== 'reviews',
-            }"
-            @click="activeTab = 'reviews'"
-          >
-            Reviews
-          </button>
+          
           
         </div>
       </div>
@@ -83,17 +65,7 @@
   
   
   
-      <!-- Reviews -->
-      <div v-if="activeTab === 'reviews'">
-        <div class="text-4xl font-bold text-center text-gray-800 mb-6">
-          <h1>Reviews</h1>
-        </div>
-  
-        <div>
-          <!-- Add review content here -->
-        </div>
-      </div>
-  
+      
   
     
     </div>

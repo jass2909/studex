@@ -72,10 +72,11 @@
             </p>
             <div class="flex">
               <button
+              v-if="!offer.review"
                 @click="leaveReview(offer.id)"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded mt-4"
               >
-                Mark Completed
+                Leave Review
               </button>
             </div>
           </div>
