@@ -103,7 +103,7 @@
           <button
             v-if="offer.status === 'Accepted'"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mx-2"
-            @click="(MeetupId = offer.id), (showMeetupPlaceModal = true)"
+            @click="(MeetupId = offer.id), (showMeetupPlaceModal = true), currentSellerId = offer.sellerId"
           >
             Propose a Meetup
           </button>
@@ -176,7 +176,8 @@
                         Confirm
                       </button>
                     </div>
-                    <div class="mt-2">
+                    <div v-if="districtSelected">
+                      <div class="mt-2">
                       <select
                         v-model="selectedMeetupPlace"
                         class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -186,7 +187,7 @@
                           :key="place.id"
                           :value="place"
                         >
-                          {{ place }}
+                          {{ place.name }} ({{ place.distance }})
                         </option>
                       </select>
                     </div>
@@ -196,6 +197,7 @@
                         v-model="selectedMeetupDateTime"
                         class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -211,7 +213,7 @@
                       MeetupId,
                       selectedMeetupPlace,
                       selectedMeetupDateTime,
-                      offer.sellerId
+                      currentSellerId
                     )
                   "
                 >
@@ -227,7 +229,7 @@
                 <button
                   type="button"
                   class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  @click="showMeetupPlaceModal = false"
+                  @click="showMeetupPlaceModal = false, districtSelected = false"
                 >
                   Cancel
                 </button>
@@ -402,6 +404,7 @@ export default {
       MeetupId: null,
       productPostalCode: null,
       districtSelected: false,
+      currentSellerId: null,
     };
   },
   mounted() {},
