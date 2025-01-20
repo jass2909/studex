@@ -65,6 +65,7 @@
               </button>
             </div>
           </div>
+
           <div v-if="offer.status === 'Sold'">
             <p class="text-green-500 mt-4">
               This item has been sold to the you.
@@ -305,14 +306,6 @@
             </p>
             <div class="flex">
               <button
-                @click="leaveReview(offer.id)"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded mt-4"
-              >
-                Leave Review for {{ offer.buyerId }}
-              </button>
-            </div>
-            <div class="flex">
-              <button
                 @click="markCompleted(offer.id)"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded mt-4"
               >
@@ -454,6 +447,44 @@ export default {
       window.open(googleMapsUrl, "_blank");
     },
 
+    getReviews() {
+      return this.outgoingOffers.map(offer => ({
+        productName: offer.productName,
+        review: offer.review || "No review yet",
+      }));
+    },
+
+    async leaveReview(offerId) {
+      const review = prompt("Enter your review for the seller:");
+      if (!review) {
+        alert("Review cannot be empty.");
+        return;
+      }
+
+      try {
+        const offerRef = doc(db, "offers", offerId);
+        await updateDoc(offerRef, { review: review });
+        console.log();
+        await Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Review submitted successfully",
+          showConfirmButton: true,
+          timer: 2000,
+        });
+        this.fetchOffers();
+        console.log("Review submitted successfully.", review);
+      } catch (error) {
+        console.error("Error submitting review:", error);
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error submitting review. Please try again later.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    },
     async fetchOffers() {
       // If user is not logged in, exit early
       if (!this.getUser) {
@@ -543,7 +574,7 @@ export default {
       try {
         const offerRef = doc(db, "offers", offerId);
         await deleteDoc(offerRef);
-        this.sellerFCMToken = await getSellerFCMToken(sellerId);
+        this.sellerFCMToken = await getSellerFCMToken(this.sellerId);
         sendPushNotification(
           this.sellerFCMToken,
           "Offer Cancelled",
@@ -638,7 +669,7 @@ export default {
           meetupPlace: meetupPlace,
           meetUpDateAndTime: selectedMeetupDateTime,
         });
-        this.sellerFCMToken = await getSellerFCMToken(sellerId);
+        this.sellerFCMToken = await getSellerFCMToken(this.sellerId);
         sendPushNotification(
           this.sellerFCMToken,
           "Meetup Proposed",
@@ -675,6 +706,7 @@ export default {
   async created() {
     // Call fetchOffers method initially to check if the user is already available
     this.fetchOffers();
+    console.log("Review", this.outgoingOffers);
   },
 };
 </script>

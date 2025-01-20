@@ -316,10 +316,18 @@
       <div class="text-4xl font-bold text-center text-gray-800 mb-6">
         <h1>My Reviews</h1>
       </div>
-
-      <div>
-        <!-- Add review content here -->
+      <div v-if="getUserReviews().length > 0" class="mb-8 mx-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Reviews</h2>
+        <div
+            v-for="review in getUserReviews()"
+            :key="review.productName"
+            class="bg-white rounded-lg shadow-lg p-4 mb-4"
+        >
+          <p><strong>Product:</strong> {{ review.productName }}</p>
+          <p><strong>Review:</strong> {{ review.review }}</p>
+        </div>
       </div>
+
     </div>
 
     <!-- Wishlist -->
@@ -443,7 +451,6 @@ export default {
       NewBio: null,
     };
   },
-
   components: {
     WishlistPage,
     OffersPage,
@@ -474,9 +481,26 @@ export default {
       }
     },
     async fetchOffers() {
-      this.$refs.OffersPage.fetchOffers();
+      try {
+        await this.$refs.OffersPage.fetchOffers();
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+        alert("Error fetching offers. Please try again later.");
+      }
     },
-
+    getUserReviews() {
+      try {
+        const reviews = this.$refs.OffersPage.getReviews();
+        if (!reviews) {
+          throw new Error("No reviews found");
+        }
+        return reviews;
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+        alert("Error fetching reviews. Please try again later.");
+        return [];
+      }
+    },
     async fetchProducts() {
       try {
         const q = query(
