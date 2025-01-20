@@ -59,9 +59,29 @@
                 View in Maps
               </button>
              
+             
             </div>
+            
           </div>
+          <div v-if="offer.status === 'Sold'">
+            <p class="text-green-500 mt-4">
+              This item has been sold to the you.
+            </p>
+            <div class="flex">
+              <button
+                @click="leaveReview(offer.id)"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded mt-4"
+              >
+                Leave Review for {{ offer.sellerId }}
+              </button>
+             
+             
+            </div>
+           
 
+            
+          </div>
+          
           <!-- Propose a Meetup if the offer is accepted -->
           <p v-if="offer.status === 'Accepted'" class="text-green-500 mt-4">
             <strong
@@ -263,9 +283,43 @@
               >
                 View in Maps
               </button>
+              <button
+                @click="markAsSold(offer.id)"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded mt-4"
+              >
+                Mark as Sold
+              </button>
              
             </div>
           </div>
+          <div v-if="offer.status === 'Sold'">
+            <p class="text-green-500 mt-4">
+              This item has been sold to the seller.
+            </p>
+            <div class="flex">
+              <button
+                @click="leaveReview(offer.id)"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded mt-4"
+              >
+                Leave Review for {{ offer.buyerId }}
+              </button>
+             
+             
+            </div>
+            <div class="flex">
+              <button
+                @click="markCompleted(offer.id)"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded mt-4"
+              >
+                Close Offer
+              </button>
+             
+             
+            </div>
+
+            
+          </div>
+
           <div class="flex justify-center items-center">
             <button
               v-if="offer.status === 'Meetup Proposed'"
@@ -528,6 +582,16 @@ export default {
           showConfirmButton: false,
           timer: 1500,
         });
+      }
+    },
+    async markAsSold(offerId, buyerId) {
+      try {
+        const offerRef = doc(db, "offers", offerId);
+        await updateDoc(offerRef, { status: "Sold", soldTo: buyerId });
+        this.fetchOffers();
+      } catch (error) {
+        console.error("Error marking offer as sold:", error);
+        alert("Error marking offer as sold. Please try again later.");
       }
     },
     
