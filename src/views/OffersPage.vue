@@ -165,6 +165,17 @@
                     >
                       Select a Meetup Place
                     </h3>
+                    <!-- Other template code -->
+                    <div v-if="showDistrictModal">
+                      <label for="districtPlace">Select your District </label>
+                      <select v-model="selectedDistrict" id="districtPlace">
+                        <option v-for="place in districtPlaces" :key="place" :value="place">
+                          {{ place.name }}
+                        </option>
+                      </select>
+                      <br>
+                      <button @click="confirmDistrict">Confirm</button>
+                    </div>
                     <div class="mt-2">
                       <select
                         v-model="selectedMeetupPlace"
@@ -175,7 +186,7 @@
                           :key="place.id"
                           :value="place"
                         >
-                          {{ place.name }}
+                          {{ place }}
                         </option>
                       </select>
                     </div>
@@ -204,6 +215,13 @@
                   "
                 >
                   Propose Meetup
+                </button>
+                <button
+                    type="button"
+                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    @click=""
+                >
+                  Sort Meetup Places
                 </button>
                 <button
                   type="button"
@@ -362,12 +380,14 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import meetupPlaces from "@/data/meetup-places.json";
+import districtPlaces from "@/data/district-places.json";
 
 import { sendPushNotification } from "../notify";
 import { getSellerFCMToken } from "../utils/firebaseUtils";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
 import Swal from "sweetalert2";
+import {getOptimalMeetupPlace} from "@/utils/places";
 export default {
   data() {
     return {
@@ -379,7 +399,11 @@ export default {
       selectedMeetupPlace: null,
       selectedMeetupDateTime: null,
       meetupPlaces: meetupPlaces,
+      districtPlaces: districtPlaces,
+      selectedDistrict: null,
+      showDistrictModal: true,
       MeetupId: null,
+      productPostalCode: null,
     };
   },
   mounted() {},
@@ -393,6 +417,19 @@ export default {
     getUser: "fetchOffers",
   },
   methods: {
+    confirmDistrict() {
+      // Logic to handle the selected meetup place
+      this.showDistrictModal = false;
+      if (!this.showDistrictModal) {
+        this.getSortedMeetupPlaces();
+      }
+    },
+    getSortedMeetupPlaces() {
+      // Logic to sort the meetup places based on the selected district
+      const optimalPlaces = getOptimalMeetupPlace(this.selectedDistrict.name);
+      this.meetupPlaces = optimalPlaces;
+
+    },
     formatMeetupDateTime(dateTimeString) {
       const dateTime = dayjs(dateTimeString);
       return `${dateTime.locale("en").format("dddd, MMMM D, YYYY - h:mm A")}`;

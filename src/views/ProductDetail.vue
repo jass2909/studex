@@ -293,6 +293,7 @@ export default {
         await Swal.fire({
           icon: "Success",
           title: "Added to Wishlist!",
+          text: "The product has been added to your wishlist.",
           showConfirmButton: true,
           timer: 1500,
         });

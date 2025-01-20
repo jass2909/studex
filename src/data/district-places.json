@@ -1,0 +1,141 @@
+[
+  {
+    "id": 1,
+    "name": "1010",
+    "address": "Wipplingerstraße 8, 1010 Wien",
+    "coordinates": { "lat": 48.2115, "lng": 16.3668 }
+  },
+  {
+    "id": 2,
+    "name": "1020",
+    "address": "Karmelitergasse 9, 1020 Wien",
+    "coordinates": { "lat": 48.2165, "lng": 16.3802 }
+  },
+  {
+    "id": 3,
+    "name": "1030",
+    "address": "Karl-Borromäus-Platz 3, 1030 Wien",
+    "coordinates": { "lat": 48.2075, "lng": 16.3965 }
+  },
+  {
+    "id": 4,
+    "name": "1040",
+    "address": "Rechte Wienzeile 105, 1050 Wien",
+    "coordinates": { "lat": 48.1925, "lng": 16.3560 }
+  },
+  {
+    "id": 5,
+    "name": "1050",
+    "address": "Rechte Wienzeile 105, 1050 Wien",
+    "coordinates": { "lat": 48.1925, "lng": 16.3560 }
+  },
+  {
+    "id": 6,
+    "name": "1060",
+    "address": "Hermanngasse 24-26, 1070 Wien",
+    "coordinates": { "lat": 48.2020, "lng": 16.3500 }
+  },
+  {
+    "id": 7,
+    "name": "1070",
+    "address": "Hermanngasse 24-26, 1070 Wien",
+    "coordinates": { "lat": 48.2020, "lng": 16.3500 }
+  },
+  {
+    "id": 8,
+    "name": "1080",
+    "address": "Wipplingerstraße 8, 1010 Wien",
+    "coordinates": { "lat": 48.2115, "lng": 16.3668 }
+  },
+  {
+    "id": 9,
+    "name": "1090",
+    "address": "Alserbachstraße 41, 1090 Wien",
+    "coordinates": { "lat": 48.2250, "lng": 16.3565 }
+  },
+  {
+    "id": 10,
+    "name": "1100",
+    "address": "Laxenburger Straße 43-45, 1100 Wien",
+    "coordinates": { "lat": 48.1845, "lng": 16.3770 }
+  },
+  {
+    "id": 11,
+    "name": "1110",
+    "address": "Enkplatz 2, 1110 Wien",
+    "coordinates": { "lat": 48.1710, "lng": 16.4130 }
+  },
+  {
+    "id": 12,
+    "name": "1120",
+    "address": "Schönbrunner Straße 259, 1120 Wien",
+    "coordinates": { "lat": 48.1855, "lng": 16.3350 }
+  },
+  {
+    "id": 13,
+    "name": "1130",
+    "address": "Hietzinger Kai 1-3, 1130 Wien",
+    "coordinates": { "lat": 48.1860, "lng": 16.3080 }
+  },
+  {
+    "id": 14,
+    "name": "1140",
+    "address": "Hietzinger Kai 1-3, 1130 Wien",
+    "coordinates": { "lat": 48.1860, "lng": 16.3080 }
+  },
+  {
+    "id": 15,
+    "name": "1150",
+    "address": "Gasgasse 8-10, 1150 Wien",
+    "coordinates": { "lat": 48.1920, "lng": 16.3355 }
+  },
+  {
+    "id": 16,
+    "name": "1160",
+    "address": "Richard-Wagner-Platz 19, 1160 Wien",
+    "coordinates": { "lat": 48.2100, "lng": 16.3300 }
+  },
+  {
+    "id": 17,
+    "name": "1170",
+    "address": "Kalvarienberggasse 29, 1170 Wien",
+    "coordinates": { "lat": 48.2230, "lng": 16.3360 }
+  },
+  {
+    "id": 18,
+    "name": "1180",
+    "address": "Martinstraße 100, 1180 Wien",
+    "coordinates": { "lat": 48.2340, "lng": 16.3360 }
+  },
+  {
+    "id": 19,
+    "name": "1190",
+    "address": "Pfarrwiesengasse 23C, 1190 Wien",
+    "coordinates": { "lat": 48.2410, "lng": 16.3430 }
+  },
+  {
+    "id": 20,
+    "name": "1200",
+    "address": "Brigittaplatz 10, 1200 Wien",
+    "coordinates": { "lat": 48.2330, "lng": 16.3700 }
+    },
+  {
+    "id": 21,
+    "name": "1210",
+    "address": "Am Spitz 1, 1210 Wien",
+    "coordinates": { "lat": 48.2570, "lng": 16.3910 }
+  },
+  {
+    "id": 22,
+    "name": "1220",
+    "address": "Schrödingerplatz 1, 1220 Wien",
+    "coordinates": { "lat": 48.2415, "lng": 16.4135 }
+  },
+  {
+    "id": 23,
+    "name": "1230",
+    "address": "Perchtoldsdorfer Straße 2, 1230 Wien",
+    "coordinates": { "lat": 48.1520, "lng": 16.2930 }
+  }
+]
+
