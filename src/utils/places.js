@@ -21,22 +21,31 @@ export function getOptimalMeetupPlace(buyerPostalCode) {
     const buyerPlace = districtPlaces.find(place => place.name === buyerPostalCode);
 
     if (!buyerPlace) {
-        return null;
+        return null; // Return null if the buyer's place is not found
     }
 
+    const buyerLat = parseFloat(buyerPlace.coordinates.lat);
+    const buyerLon = parseFloat(buyerPlace.coordinates.lng);
+
     const distances = meetupPlaces.map(meetupPlace => {
-        const buyerLat = parseFloat(buyerPlace.coordinates.lat);
-        const buyerLon = parseFloat(buyerPlace.coordinates.lng);
         const meetupLat = parseFloat(meetupPlace.coordinates.lat);
         const meetupLon = parseFloat(meetupPlace.coordinates.lng);
         const distance = calculateDistance(buyerLat, buyerLon, meetupLat, meetupLon);
+
         return {
-            ...meetupPlace,
+            name: meetupPlace.name,
+            coordinates: meetupPlace.coordinates, // Include coordinates
             distance: distance,
         };
     });
 
+    // Sort by distance
     distances.sort((a, b) => a.distance - b.distance);
 
-    return distances.map(place => `${place.name} (${place.distance.toFixed(2)} km)`);
+    // Return full details for each meetup place
+    return distances.map(place => ({
+        name: place.name,
+        coordinates: place.coordinates,
+        distance: `${place.distance.toFixed(2)} km`
+    }));
 }

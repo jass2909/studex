@@ -1,11 +1,14 @@
 <template>
   <div class="container mx-auto p-4 flex justify-center">
+   
     <div class="flex flex-col md:flex-row justify-between">
+     
       <!-- Outgoing Offers -->
       <div v-if="outgoingOffers.length > 0" class="mb-8 mx-6">
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">
           Outgoing Offers
         </h2>
+        
         <div
           v-for="offer in outgoingOffers"
           :key="offer.id"
@@ -48,7 +51,8 @@
             <p class="text-green-500 mt-4">
               The seller has accepted your proposal, please meetup with the
               seller at the designated location and time. <br />
-              Meetup-name: {{ offer.meetupPlace.name }}, <br> Time:
+              Meetup-name: {{ offer.meetupPlace.name }}, <br />
+              Time:
               {{ formatMeetupDateTime(offer.meetUpDateAndTime) }}
             </p>
             <div class="flex">
@@ -58,10 +62,7 @@
               >
                 View in Maps
               </button>
-             
-             
             </div>
-            
           </div>
           <div v-if="offer.status === 'Sold'">
             <p class="text-green-500 mt-4">
@@ -74,14 +75,9 @@
               >
                 Leave Review for {{ offer.sellerId }}
               </button>
-             
-             
             </div>
-           
-
-            
           </div>
-          
+
           <!-- Propose a Meetup if the offer is accepted -->
           <p v-if="offer.status === 'Accepted'" class="text-green-500 mt-4">
             <strong
@@ -166,36 +162,53 @@
                       Select a Meetup Place
                     </h3>
                     <!-- Other template code -->
-                    <div v-if="showDistrictModal">
-                      <label for="districtPlace">Select your District </label>
-                      <select v-model="selectedDistrict" id="districtPlace">
-                        <option v-for="place in districtPlaces" :key="place" :value="place">
+                    <div v-if="showDistrictModal" class="">
+                      <label for="districtPlace"
+                        ><strong> Select your District: </strong></label
+                      >
+                      <select
+                        v-model="selectedDistrict"
+                        id="districtPlace"
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg mt-2"
+                      >
+                        <option
+                          v-for="place in districtPlaces"
+                          :key="place"
+                          :value="place"
+                        >
                           {{ place.name }}
                         </option>
                       </select>
-                      <br>
-                      <button @click="confirmDistrict">Confirm</button>
-                    </div>
-                    <div class="mt-2">
-                      <select
-                        v-model="selectedMeetupPlace"
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      <br />
+                      <button
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                        @click="confirmDistrict"
                       >
-                        <option
-                          v-for="place in meetupPlaces"
-                          :key="place.id"
-                          :value="place"
-                        >
-                          {{ place }}
-                        </option>
-                      </select>
+                        Confirm
+                      </button>
                     </div>
-                    <div class="mt-2">
-                      <input
-                        type="datetime-local"
-                        v-model="selectedMeetupDateTime"
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
+                    <div v-if="districtSelected">
+                      <div class="mt-2">
+                        <select
+                          v-model="selectedMeetupPlace"
+                          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option
+                            v-for="place in meetupPlaces"
+                            :key="place.id"
+                            :value="place"
+                          >
+                            {{ place.name }}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="mt-2">
+                        <input
+                          type="datetime-local"
+                          v-model="selectedMeetupDateTime"
+                          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -210,19 +223,14 @@
                     updateOfferWithMeetupPlace(
                       MeetupId,
                       selectedMeetupPlace,
-                      selectedMeetupDateTime
+                      selectedMeetupDateTime,
+                      offer.sellerId
                     )
                   "
                 >
                   Propose Meetup
                 </button>
-                <button
-                    type="button"
-                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    @click=""
-                >
-                  Sort Meetup Places
-                </button>
+
                 <button
                   type="button"
                   class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
@@ -274,9 +282,10 @@
           </p>
           <div v-if="offer.status === 'Proposal Accepted by Seller'">
             <p class="text-green-500 mt-4">
-              You have accepted the proposal, please meetup with the
-              buyer at the designated location and time. <br />
-              Meetup-name: {{ offer.meetupPlace.name }}, <br> Time:
+              You have accepted the proposal, please meetup with the buyer at
+              the designated location and time. <br />
+              Meetup-name: {{ offer.meetupPlace.name }}, <br />
+              Time:
               {{ formatMeetupDateTime(offer.meetUpDateAndTime) }}
             </p>
             <div class="flex">
@@ -292,7 +301,6 @@
               >
                 Mark as Sold
               </button>
-             
             </div>
           </div>
           <div v-if="offer.status === 'Sold'">
@@ -306,8 +314,6 @@
               >
                 Leave Review for {{ offer.buyerId }}
               </button>
-             
-             
             </div>
             <div class="flex">
               <button
@@ -316,11 +322,7 @@
               >
                 Close Offer
               </button>
-             
-             
             </div>
-
-            
           </div>
 
           <div class="flex justify-center items-center">
@@ -341,7 +343,7 @@
             <button
               v-if="offer.status === 'Meetup Proposed'"
               class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
-              @click="declineOffer(offer.id, 'Proposal Declined by Seller')"
+              @click="declineOffer(offer.id, 'Proposal Declined by Seller', offer.buyerId)"
             >
               Decline Porposal
             </button>
@@ -350,7 +352,7 @@
           <button
             v-if="offer.status === 'Pending'"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-            @click="acceptOffer(offer.id)"
+            @click="acceptOffer(offer.id, offer.buyerId)"
           >
             Accept Offer
           </button>
@@ -387,7 +389,7 @@ import { getSellerFCMToken } from "../utils/firebaseUtils";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
 import Swal from "sweetalert2";
-import {getOptimalMeetupPlace} from "@/utils/places";
+import { getOptimalMeetupPlace } from "@/utils/places";
 export default {
   data() {
     return {
@@ -395,6 +397,7 @@ export default {
       incomingOffers: [],
       loading: true,
       sellerFCMToken: null,
+      buyerFCMToken: null,
       showMeetupPlaceModal: false,
       selectedMeetupPlace: null,
       selectedMeetupDateTime: null,
@@ -404,6 +407,7 @@ export default {
       showDistrictModal: true,
       MeetupId: null,
       productPostalCode: null,
+      districtSelected: false,
     };
   },
   mounted() {},
@@ -420,6 +424,7 @@ export default {
     confirmDistrict() {
       // Logic to handle the selected meetup place
       this.showDistrictModal = false;
+      this.districtSelected = true;
       if (!this.showDistrictModal) {
         this.getSortedMeetupPlaces();
       }
@@ -428,7 +433,7 @@ export default {
       // Logic to sort the meetup places based on the selected district
       const optimalPlaces = getOptimalMeetupPlace(this.selectedDistrict.name);
       this.meetupPlaces = optimalPlaces;
-
+      console.log("optimalPlaces: ", optimalPlaces);
     },
     formatMeetupDateTime(dateTimeString) {
       const dateTime = dayjs(dateTimeString);
@@ -444,6 +449,7 @@ export default {
     },
     openInMaps(coordinates) {
       const { lat, lng } = coordinates;
+      console.log(coordinates);
       // Construct a Google Maps URL
       const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
       // Open the URL in a new tab or window
@@ -489,17 +495,24 @@ export default {
         this.loading = false;
       }
     },
-    async acceptOffer(offerId) {
+    async acceptOffer(offerId, buyerId) {
       try {
         const offerRef = doc(db, "offers", offerId);
         await updateDoc(offerRef, { status: "Accepted" });
+        this.buyerFCMToken = await getSellerFCMToken(buyerId);
+        sendPushNotification(
+          this.buyerFCMToken,
+          "Offer Accepted",
+          "The Buyer has Accepted the offer"
+        );
+        
         this.fetchOffers();
       } catch (error) {
         console.error("Error accepting offer:", error);
         alert("Error accepting offer. Please try again later.");
       }
     },
-    async declineOffer(offerId, status) {
+    async declineOffer(offerId, status, buyerId) {
       try {
         const offerRef = doc(db, "offers", offerId);
         await updateDoc(offerRef, { status: status });
@@ -511,6 +524,12 @@ export default {
           showConfirmButton: true,
           timer: 2000,
         });
+        this.buyerFCMToken = await getSellerFCMToken(buyerId);
+        sendPushNotification(
+          this.buyerFCMToken,
+          "Offer Declined",
+          "The Buyer has declined the offer"
+        );
       } catch (error) {
         console.error("Error declining offer:", error);
         await Swal.fire({
@@ -528,9 +547,9 @@ export default {
         await deleteDoc(offerRef);
         this.sellerFCMToken = await getSellerFCMToken(sellerId);
         sendPushNotification(
-            this.sellerFCMToken,
-            "Offer Cancelled",
-            "The Buyer has cancelled the offer"
+          this.sellerFCMToken,
+          "Offer Cancelled",
+          "The Buyer has cancelled the offer."
         );
         await Swal.fire({
           icon: "success",
@@ -596,7 +615,7 @@ export default {
         alert("Error marking offer as sold. Please try again later.");
       }
     },
-    
+
     async proposeMeetup(offerId) {
       try {
         // Show the meetup place selection modal
@@ -610,17 +629,26 @@ export default {
     async updateOfferWithMeetupPlace(
       offerId,
       meetupPlace,
-      selectedMeetupDateTime
+      selectedMeetupDateTime,
+      sellerId
     ) {
       try {
+        console.log(meetupPlace)
         const offerRef = doc(db, "offers", offerId);
         await updateDoc(offerRef, {
           status: "Meetup Proposed",
           meetupPlace: meetupPlace,
           meetUpDateAndTime: selectedMeetupDateTime,
         });
+        this.sellerFCMToken = await getSellerFCMToken(sellerId);
+        sendPushNotification(
+          this.sellerFCMToken,
+          "Meetup Proposed",
+          "The Buyer has proposed a meetup"
+        );
         console.log("Offer with meetup place updated successfully.");
         this.showMeetupPlaceModal = false;
+        this.districtSelected = false;
         this.fetchOffers();
       } catch (error) {
         console.error("Error updating offer with meetup place:", error);
@@ -631,6 +659,12 @@ export default {
       try {
         const offerRef = doc(db, "offers", offerId);
         await updateDoc(offerRef, { status: status });
+        this.sellerFCMToken = await getSellerFCMToken(sellerId);
+        sendPushNotification(
+          this.sellerFCMToken,
+          "Proposal Accepted",
+          "The Buyer has accepted the proposal"
+        );
         this.fetchOffers();
       } catch (error) {
         console.error("Error accepting proposal:", error);

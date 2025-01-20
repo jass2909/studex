@@ -296,10 +296,19 @@
     <!-- Offers -->
     <div v-if="activeTab === 'offers'">
       <div class="text-4xl font-bold text-center text-gray-800 mb-6">
-        <h1>My Offers</h1>
+        <h1>My Offers </h1>
+        
       </div>
-
-      <OffersPage />
+      <div class="text-center text-gray-800 mb-6" >
+        <Button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mb-4 text-center"
+          @click="fetchOffers"
+        >
+          Refresh
+        </Button>
+      </div>
+      
+      <OffersPage ref="OffersPage" />
     </div>
 
     <!-- Reviews -->
@@ -463,6 +472,9 @@ export default {
       } catch (error) {
         console.error("Failed to fetch user data:", error);
       }
+    },
+    async fetchOffers() {
+      this.$refs.OffersPage.fetchOffers();
     },
 
     async fetchProducts() {

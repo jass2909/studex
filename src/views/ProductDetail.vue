@@ -401,7 +401,8 @@ export default {
         await sendPushNotification(
             this.sellerFCMToken,
             `You have a new offer for your product!`,
-            `${this.getUser.username} has made an offer for your product "${this.product.name}".`
+            `${this.getUser.username} has made an offer for your product "${this.product.name}".`,
+            this.product.imageUrl
         );
       } catch (error) {
         console.error("Error placing offer:", error);
